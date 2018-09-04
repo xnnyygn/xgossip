@@ -2,18 +2,13 @@ package in.xnnyygn.xgossip.messages;
 
 import in.xnnyygn.xgossip.MemberEndpoint;
 
-public class PingRequestRpc extends AbstractMessage {
+public class ProxyPingDoneResponse extends AbstractPingResponse {
 
-    private final long pingAt;
     private final MemberEndpoint endpoint;
 
-    public PingRequestRpc(long pingAt, MemberEndpoint endpoint) {
-        this.pingAt = pingAt;
+    public ProxyPingDoneResponse(long pingAt, MemberEndpoint endpoint) {
+        super(pingAt);
         this.endpoint = endpoint;
-    }
-
-    public long getPingAt() {
-        return pingAt;
     }
 
     public MemberEndpoint getEndpoint() {
@@ -22,10 +17,9 @@ public class PingRequestRpc extends AbstractMessage {
 
     @Override
     public String toString() {
-        return "PingRequestRpc{" +
-                "pingAt=" + pingAt +
+        return "ProxyPingDoneResponse{" +
+                "pingAt=" + getPingAt() +
                 ", endpoint=" + endpoint +
                 '}';
     }
-
 }

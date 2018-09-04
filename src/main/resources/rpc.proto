@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+option java_package = "in.xnnyygn.xgossip.rpc";
+option java_outer_classname = "Protos";
+
+message MemberEndpoint {
+    string host = 1;
+    int32 port = 2;
+}
+
+message Member {
+    MemberEndpoint endpoint = 1;
+    int64 time_added = 2;
+    int64 time_removed = 3;
+}
+
+message MemberJoinRpc {
+    MemberEndpoint endpoint = 1;
+    int64 time_joined = 2;
+}
+
+message MemberJoinResponse {
+    repeated Member members = 1;
+}
+
+message MemberJoinedUpdate {
+    int64 id = 1;
+    MemberEndpoint endpoint = 2;
+    int64 time_joined = 3;
+}
+
+message MemberUpdatesRpc {
+    bytes member_digest = 1;
+    repeated MemberJoinedUpdate member_joined_update = 2;
+}
+
+message MemberUpdatesAgreedResponse {
+    int64 exchange_at = 1;
+    map<int64, bool> updated_map = 2;
+}
+
+message MemberUpdatesResponse {
+    int64 exchange_at = 1;
+    map<int64, bool> updated_map = 2;
+    repeated MemberJoinedUpdate member_joined_update = 3;
+    bytes member_digest = 4;
+    int32 hop_count = 5;
+}
+
+message MembersMergeResponse {
+    int64 exchange_at = 1;
+    map<int64, bool> updated_map = 2;
+    repeated Member members = 3;
+    bytes members_digest = 4;
+    int32 hop_count = 5;
+}
+
+message MembersMergedResponse {
+    int64 exchange_at = 1;
+}

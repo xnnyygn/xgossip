@@ -27,24 +27,6 @@ public class MemberListExchangerTest {
         exchanger = new MemberListExchanger(context);
     }
 
-    @Test
-    public void testSpreadUpdatesNoEndpoint() {
-        exchanger.spreadUpdates();
-        MockTransporter mockTransporter = (MockTransporter) context.getTransporter();
-        assertEquals(0, mockTransporter.getMessages().size());
-    }
-
-    @Test
-    public void testSpreadUpdates() {
-        MemberEndpoint endpoint = new MemberEndpoint("localhost", 5303);
-        context.getMemberList().add(new Member(endpoint));
-        exchanger.spreadUpdates();
-        MockTransporter mockTransporter = (MockTransporter) context.getTransporter();
-        List<MockTransporter.Message> messages = mockTransporter.getMessages();
-        assertEquals(1, messages.size());
-        assertEquals(endpoint, messages.get(0).getRecipient());
-    }
-
     // case 1
     @Test
     public void testOnReceiveMemberUpdatesRpcSameDigest() {

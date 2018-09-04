@@ -1,109 +1,242 @@
 package in.xnnyygn.xgossip;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.eventbus.Subscribe;
+import com.google.common.collect.Sets;
 import in.xnnyygn.xgossip.messages.*;
+import in.xnnyygn.xgossip.updates.MemberSuspectedNotification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
+/**
+ * Failure detector.
+ */
 class FailureDetector {
 
     private static final Logger logger = LoggerFactory.getLogger(FailureDetector.class);
     private static final long INTERVAL = 3000;
     private static final long PING_TIMEOUT = 1000;
     private static final long PROXY_PING_TIMEOUT = 2000;
+    private final ConcurrentLinkedQueue<MemberEndpoint> suspectedMembers = new ConcurrentLinkedQueue<>();
+    private final LatencyRecorder latencyRecorder = new LatencyRecorder();
     private final MemberListContext context;
-    private ScheduledFuture<?> pingTimeout;
-    private ScheduledFuture<?> proxyPingTimeout;
+    private volatile Ping lastPing = NO_PING;
 
-    FailureDetector(@Nonnull MemberListContext context) {
+    FailureDetector(MemberListContext context) {
         this.context = context;
     }
 
     void initialize() {
-        context.getEventBus().register(this);
+        MessageDispatcher dispatcher = context.getMessageDispatcher();
+        dispatcher.register(PingRpc.class, this::onReceivePingRpc);
+        dispatcher.register(PingResponse.class, m -> lastPing.onResponse(m));
+        dispatcher.register(PingRequestRpc.class, this::onReceivePingRequestRpc);
+        dispatcher.register(ProxyPingRpc.class, this::onReceiveProxyPingRpc);
+        dispatcher.register(ProxyPingResponse.class, this::onReceiveProxyPingResponse);
+        dispatcher.register(ProxyPingDoneResponse.class, m -> lastPing.onResponse(m));
+
         schedulePing();
     }
 
     private void schedulePing() {
-        context.getScheduler().schedule(this::ping, INTERVAL, TimeUnit.MILLISECONDS);
+        logger.debug("schedule ping");
+        context.getScheduler().schedule(this::ping, INTERVAL);
     }
 
-    private void ping() {
-        MemberEndpoint endpoint = context.getMemberList().getRandomEndpointExceptSelf();
+    void ping() {
+        MemberEndpoint endpoint = selectMember();
+        if (endpoint == null) {
+            return;
+        }
+        PingRpc rpc = new PingRpc();
+        context.getTransporter().send(endpoint, rpc);
+        lastPing = new DirectPing(endpoint, rpc.getPingAt());
+    }
+
+    private MemberEndpoint selectMember() {
+        Set<MemberEndpoint> pingFailed = latencyRecorder.listEndpointWithFailedPing();
+
+        // find first not pinged member
+        MemberEndpoint endpoint;
+        do {
+            endpoint = suspectedMembers.poll();
+        } while (endpoint != null && pingFailed.contains(endpoint));
+
         if (endpoint != null) {
-            context.getTransporter().send(endpoint, new PingRpc());
-            pingTimeout = context.getScheduler().schedule(() -> pingTimeout(endpoint), PING_TIMEOUT, TimeUnit.MILLISECONDS);
+            return endpoint;
         }
+        return context.getMemberList().getRandomEndpointExceptSelf();
     }
 
-    public void pingTimeout(@Nonnull MemberEndpoint endpoint) {
-        Collection<MemberEndpoint> proxyEndpoints = context.getMemberList().getRandomEndpointsExcept(3, ImmutableSet.of(context.getSelfEndpoint(), endpoint));
-        if (proxyEndpoints.isEmpty()) {
-            // no proxy to ping
-            context.getLatencyRecorder().add(endpoint, System.currentTimeMillis(), -1);
-            return;
-        }
-        for (MemberEndpoint proxyEndpoint : proxyEndpoints) {
-            context.getTransporter().send(endpoint, new PingRequestRpc(endpoint));
-        }
-        proxyPingTimeout = context.getScheduler().schedule(() -> proxyPingTimeout(endpoint), PROXY_PING_TIMEOUT, TimeUnit.MILLISECONDS);
+    // subscriber
+    void onReceivePingRpc(RemoteMessage<PingRpc> message) {
+        PingRpc rpc = message.get();
+        context.getTransporter().reply(message, new PingResponse(rpc.getPingAt()));
     }
 
-    @Subscribe
-    public void onReceivePingRpc(RemoteMessage<PingRpc> message) {
-        context.getTransporter().reply(message, new PongResponse());
+    // subscriber
+    private void onReceivePingRequestRpc(RemoteMessage<PingRequestRpc> message) {
+        PingRequestRpc rpc = message.get();
+        context.getTransporter().send(rpc.getEndpoint(), new ProxyPingRpc(rpc.getPingAt(), message.getSender()));
     }
 
-    @Subscribe
-    public void onReceivePongResponse(RemoteMessage<PongResponse> message) {
-        cancelTimeoutAndSchedulePing(pingTimeout);
+    // subscriber
+    private void onReceiveProxyPingRpc(RemoteMessage<ProxyPingRpc> message) {
+        ProxyPingRpc rpc = message.get();
+        context.getTransporter().reply(message, new ProxyPingResponse(rpc.getPingAt(), rpc.getSourceEndpoint()));
     }
 
-    private void cancelTimeoutAndSchedulePing(ScheduledFuture<?> timeout) {
-        if (timeout == null) {
-            logger.warn("receive ping response when not ping");
-            return;
-        }
-        if (timeout.isDone()) {
-            logger.debug("receive ping response after timeout");
-            return;
-        }
-        timeout.cancel(false);
+    // subscriber
+    private void onReceiveProxyPingResponse(RemoteMessage<ProxyPingResponse> message) {
+        ProxyPingResponse response = message.get();
+        context.getTransporter().send(
+                response.getSourceEndpoint(),
+                new ProxyPingDoneResponse(response.getPingAt(), message.getSender())
+        );
+    }
+
+    void addSuspectedMember(MemberEndpoint endpoint) {
+        suspectedMembers.add(endpoint);
+    }
+
+    Set<MemberEndpoint> listSuspectedMembers() {
+        return latencyRecorder.listEndpointWithFailedPing();
+    }
+
+    List<LatencyRecorder.RankingItem> getLatencyRanking() {
+        return latencyRecorder.getRanking();
+    }
+
+    // ping lifecycle
+
+    private void resetLastPing() {
+        lastPing = NO_PING;
         schedulePing();
     }
 
-    @Subscribe
-    public void onReceivePingRequestRpc(RemoteMessage<PingRequestRpc> message) {
-        PingRequestRpc rpc = message.get();
-        context.getTransporter().send(rpc.getEndpoint(), new ProxyPingRpc(message.getSender()));
+    private void failedToPing(MemberEndpoint endpoint, long pingAt) {
+        logger.info("ping {} timeout", endpoint);
+        latencyRecorder.add(endpoint, pingAt, -1);
+        context.getUpdateList().prepend(new MemberSuspectedNotification(endpoint));
+        schedulePing();
     }
 
-    public void proxyPingTimeout(@Nonnull MemberEndpoint endpoint) {
-        context.getLatencyRecorder().add(endpoint, System.currentTimeMillis(), -1);
+    private interface Ping {
+
+        void onResponse(RemoteMessage<? extends AbstractPingResponse> message);
+
     }
 
-    @Subscribe
-    public void onReceiveProxyPingRpc(RemoteMessage<ProxyPingRpc> message) {
-        ProxyPingRpc rpc = message.get();
-        context.getTransporter().reply(message, new ProxyPingResponse(rpc.getEndpoint()));
+    private static class NoPing implements Ping {
+
+        @Override
+        public void onResponse(RemoteMessage<? extends AbstractPingResponse> message) {
+            logger.info("receive ping response from {} when no ping, ignore", message.getSender());
+        }
+
     }
 
-    @Subscribe
-    public void onReceiveProxyPingResponse(RemoteMessage<ProxyPingResponse> message) {
-        context.getTransporter().send(message.get().getEndpoint(), new PingRequestDoneResponse(message.getSender()));
+    private static final NoPing NO_PING = new NoPing();
+
+    private abstract class AbstractPing implements Ping {
+
+        final MemberEndpoint endpoint;
+        final long pingAt;
+        final ScheduledFuture<?> future;
+
+        AbstractPing(MemberEndpoint endpoint, long pingAt, long timeout) {
+            this.endpoint = endpoint;
+            this.pingAt = pingAt;
+            this.future = context.getScheduler().schedule(this::onTimeout, timeout);
+        }
+
+        abstract void onTimeout();
+
     }
 
-    @Subscribe
-    public void onReceivePingRequestDoneResponse(PingRequestDoneResponse response) {
-        cancelTimeoutAndSchedulePing(proxyPingTimeout);
+    private class DirectPing extends AbstractPing {
+
+        DirectPing(MemberEndpoint endpoint, long pingAt) {
+            super(endpoint, pingAt, PING_TIMEOUT);
+        }
+
+        @Override
+        public void onResponse(RemoteMessage<? extends AbstractPingResponse> message) {
+            AbstractPingResponse response = message.get();
+            if (!(response instanceof PingResponse)) {
+                logger.info("expect ping response but was {}", response.getClass());
+                return;
+            }
+            if (!endpoint.equals(message.getSender()) || pingAt != response.getPingAt()) {
+                logger.info("unexpected ping response from ({}, {}), expect ({}, {})",
+                        endpoint, pingAt, message.getSender(), response.getPingAt());
+                return;
+            }
+            long latency = System.currentTimeMillis() - pingAt;
+            logger.debug("{}, latency {}ms", endpoint, latency);
+            latencyRecorder.add(endpoint, pingAt, latency);
+            future.cancel(false);
+            resetLastPing();
+        }
+
+        @Override
+        void onTimeout() {
+            Set<MemberEndpoint> proxyEndpoints = context.getMemberList().getRandomEndpointsExcept(3, Sets.union(
+                    ImmutableSet.of(context.getSelfEndpoint(), endpoint),
+                    latencyRecorder.listEndpointWithFailedPing()
+            ));
+            if (proxyEndpoints.isEmpty()) {
+                logger.debug("no proxy endpoint");
+                failedToPing(endpoint, pingAt);
+                return;
+            }
+            logger.debug("proxy ping {} by {}", endpoint, proxyEndpoints);
+            for (MemberEndpoint proxyEndpoint : proxyEndpoints) {
+                context.getTransporter().send(proxyEndpoint, new PingRequestRpc(pingAt, endpoint));
+            }
+            lastPing = new ProxyPing(endpoint, pingAt, proxyEndpoints);
+        }
     }
 
+    private class ProxyPing extends AbstractPing {
 
+        private final Set<MemberEndpoint> proxyEndpoints;
+
+        ProxyPing(MemberEndpoint endpoint, long pingAt, Set<MemberEndpoint> proxyEndpoints) {
+            super(endpoint, pingAt, PROXY_PING_TIMEOUT);
+            this.proxyEndpoints = proxyEndpoints;
+        }
+
+        @Override
+        public void onResponse(RemoteMessage<? extends AbstractPingResponse> message) {
+            AbstractPingResponse response = message.get();
+            if (!(response instanceof ProxyPingDoneResponse)) {
+                logger.info("expect proxy ping done response but was {}", response.getClass());
+                return;
+            }
+            MemberEndpoint endpoint = ((ProxyPingDoneResponse) response).getEndpoint();
+            if (!proxyEndpoints.contains(message.getSender()) || pingAt != response.getPingAt() ||
+                    !this.endpoint.equals(endpoint)) {
+                logger.info("unexpected proxy ping done response from ({}, {}, {}), expect ({}, {}, {})",
+                        message.getSender(), pingAt, this.endpoint, proxyEndpoints, pingAt, endpoint);
+                return;
+            }
+            long latency = System.currentTimeMillis() - pingAt;
+            logger.debug("{}, latency {}ms through proxy {}", this.endpoint, latency, message.getSender());
+            latencyRecorder.add(this.endpoint, pingAt, latency);
+            future.cancel(false);
+            resetLastPing();
+        }
+
+        @Override
+        void onTimeout() {
+            failedToPing(endpoint, pingAt);
+        }
+
+    }
 
 }

@@ -12,6 +12,10 @@ public class RemoteMessage<T extends AbstractMessage> {
         this.sender = sender;
     }
 
+    public Class<? extends AbstractMessage> getPayloadClass() {
+        return message.getClass();
+    }
+
     public T get() {
         return message;
     }
@@ -19,4 +23,13 @@ public class RemoteMessage<T extends AbstractMessage> {
     public MemberEndpoint getSender() {
         return sender;
     }
+
+    @Override
+    public String toString() {
+        return "RemoteMessage{" +
+                "sender=" + sender +
+                ", message=" + message +
+                '}';
+    }
+
 }

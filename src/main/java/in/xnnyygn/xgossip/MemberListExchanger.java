@@ -1,8 +1,6 @@
 package in.xnnyygn.xgossip;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import com.google.common.eventbus.Subscribe;
 import in.xnnyygn.xgossip.messages.*;
 import in.xnnyygn.xgossip.updates.AbstractUpdate;
 import in.xnnyygn.xgossip.updates.MemberJoinedUpdate;
@@ -10,11 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 class MemberListExchanger {
 
-    private static final long INTERVAL = 1000;
     private static final int MAX_UPDATES = 1;
     private static final int MAX_MEMBER_UPDATES_RESPONSE_TURN = 10;
     private static final Logger logger = LoggerFactory.getLogger(MemberListExchanger.class);
@@ -25,35 +21,17 @@ class MemberListExchanger {
     }
 
     void initialize() {
-        context.getEventBus().register(this);
-        context.getScheduler().scheduleWithFixedDelay(this::spreadUpdates, INTERVAL, INTERVAL, TimeUnit.MILLISECONDS);
+        MessageDispatcher dispatcher = context.getMessageDispatcher();
+        dispatcher.register(MemberUpdatesAgreedResponse.class, this::onReceiveMemberUpdatesAgreedResponse);
+        dispatcher.register(MemberUpdatesResponse.class, this::onReceiveMemberUpdatesResponse);
+        dispatcher.register(MembersMergeResponse.class, this::onReceiveMembersMergeResponse);
+        dispatcher.register(MembersMergedResponse.class, this::onReceiveMembersMergedResponse);
     }
 
-    // run periodically
-    void spreadUpdates() {
-        spreadUpdatesTo(context.getMemberList().getRandomEndpointExceptSelf());
-    }
-
-    void spreadUpdatesExcept(MemberEndpoint excluding) {
-        spreadUpdatesTo(context.getMemberList().getRandomEndpointExcept(ImmutableSet.of(context.getSelfEndpoint(), excluding)));
-    }
-
-    private void spreadUpdatesTo(MemberEndpoint endpoint) {
-        if (endpoint == null) {
-            return;
-        }
-        MemberUpdatesRpc rpc = new MemberUpdatesRpc(
-                context.getUpdateList().take(MAX_UPDATES),
-                context.getMemberList().getDigest()
-        );
-        logger.info("start exchange with {}, {}", endpoint, rpc);
-        context.getTransporter().send(endpoint, rpc);
-    }
-
-    @Subscribe
-    public void onReceiveMemberUpdatesRpc(RemoteMessage<MemberUpdatesRpc> message) {
+    // invoked by manager
+    void onReceiveMemberUpdatesRpc(RemoteMessage<MemberUpdatesRpc> message) {
         MemberUpdatesRpc rpc = message.get();
-        logger.debug("exchange with {}, {}", message.getSender(), rpc);
+        logger.debug("exchange with {}", message.getSender());
         context.getTransporter().reply(message, processMemberUpdatesRpc(rpc));
     }
 
@@ -99,7 +77,7 @@ class MemberListExchanger {
         assert !updates.isEmpty();
         Map<Long, Boolean> updatedMap = new HashMap<>();
         Set<Long> localUpdateIds = new HashSet<>();
-        byte[] lastDigest = null;
+        byte[] lastDigest = context.getMemberList().getDigest();
         for (AbstractUpdate update : updates) {
             MemberList.UpdateResult result = processUpdate(update);
             updatedMap.put(update.getId(), result.isUpdated());
@@ -122,11 +100,11 @@ class MemberListExchanger {
         throw new IllegalArgumentException("unsupported update " + update);
     }
 
-    @Subscribe
-    public void onReceiveMemberUpdatesAgreedResponse(RemoteMessage<MemberUpdatesAgreedResponse> message) {
+    // subscriber
+    void onReceiveMemberUpdatesAgreedResponse(RemoteMessage<MemberUpdatesAgreedResponse> message) {
         MemberUpdatesAgreedResponse response = message.get();
-        logger.info("exchange done with {}, {}", message.getSender(), response);
         feedback(response.getUpdatedMap());
+        logger.info("exchange done with {}", message.getSender());
     }
 
     private void feedback(Map<Long, Boolean> updatedMap) {
@@ -141,10 +119,9 @@ class MemberListExchanger {
         }
     }
 
-    @Subscribe
-    public void onReceiveMemberUpdatesResponse(RemoteMessage<MemberUpdatesResponse> message) {
+    // subscriber
+    void onReceiveMemberUpdatesResponse(RemoteMessage<MemberUpdatesResponse> message) {
         MemberUpdatesResponse response = message.get();
-        logger.debug("exchange with {}, {}", message.getSender(), response);
         try {
             context.getTransporter().reply(message, processMemberUpdatesResponse(response));
         } catch (ExchangeTurnExceedException e) {
@@ -189,8 +166,8 @@ class MemberListExchanger {
     }
 
     // case 3, 5
-    @Subscribe
-    public void onReceiveMembersMergeResponse(RemoteMessage<MembersMergeResponse> message) {
+    // subscriber
+    void onReceiveMembersMergeResponse(RemoteMessage<MembersMergeResponse> message) {
         MembersMergeResponse response = message.get();
         logger.debug("exchange with {}, {}", message.getSender(), response);
         feedback(response.getUpdatedMap());
@@ -221,9 +198,9 @@ class MemberListExchanger {
         }
     }
 
-    @Subscribe
-    public void onReceiveMembersMergedResponse(RemoteMessage<MembersMergedResponse> message) {
-        logger.info("done exchange with {}, {}", message.getSender(), message.get());
+    // subscriber
+    private void onReceiveMembersMergedResponse(RemoteMessage<MembersMergedResponse> message) {
+        logger.info("exchange done with {}", message.getSender());
     }
 
     private static class MultiUpdateResult {

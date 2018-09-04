@@ -6,7 +6,7 @@ public interface MemberManager {
 
     void initialize();
 
-    void join(Collection<MemberEndpoint> seeds);
+    void join(Collection<MemberEndpoint> seedEndpoints);
 
     // TODO get alive members, with self?
 

@@ -6,16 +6,29 @@ import java.util.*;
 
 public class MemberUpdatesRpc extends AbstractMessage {
 
-    private final List<AbstractUpdate> updates;
+    private final long exchangeAt;
+    private final List<AbstractUpdate> updates = new ArrayList<>();
+    private final List<AbstractUpdate> notifications = new ArrayList<>();
     private final byte[] membersDigest;
 
-    public MemberUpdatesRpc(List<AbstractUpdate> updates, byte[] membersDigest) {
-        this.updates = updates;
+    public MemberUpdatesRpc(List<AbstractUpdate> rawUpdates, byte[] membersDigest) {
+        exchangeAt = System.currentTimeMillis();
+        for (AbstractUpdate update : rawUpdates) {
+            if (update.shouldFeedback()) {
+                this.updates.add(update);
+            } else {
+                this.notifications.add(update);
+            }
+        }
         this.membersDigest = membersDigest;
     }
 
     public List<AbstractUpdate> getUpdates() {
         return updates;
+    }
+
+    public List<AbstractUpdate> getNotifications() {
+        return notifications;
     }
 
     public byte[] getMembersDigest() {
@@ -29,13 +42,13 @@ public class MemberUpdatesRpc extends AbstractMessage {
     public Map<Long, Boolean> makeUpdateIdMap() {
         Map<Long, Boolean> map = new HashMap<>();
         for (AbstractUpdate update : updates) {
-            map.put(update.getId(), true);
+            map.put(update.getId(), false);
         }
         return map;
     }
 
     public long getExchangeAt() {
-        return getTimestamp();
+        return exchangeAt;
     }
 
     @Override
@@ -43,6 +56,7 @@ public class MemberUpdatesRpc extends AbstractMessage {
         return "MemberUpdatesRpc{" +
                 "exchangeAt=" + getExchangeAt() +
                 ", updates.size=" + updates.size() +
+                ", notifications.size=" + notifications.size() +
                 ", membersDigest=" + Base64.getEncoder().encodeToString(membersDigest) +
                 '}';
     }

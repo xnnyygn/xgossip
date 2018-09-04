@@ -2,6 +2,7 @@ package in.xnnyygn.xgossip;
 
 import in.xnnyygn.xgossip.messages.AbstractMessage;
 import in.xnnyygn.xgossip.messages.RemoteMessage;
+import in.xnnyygn.xgossip.rpc.Transporter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,13 +12,21 @@ public class MockTransporter implements Transporter {
     private final List<Message> messages = new ArrayList<>();
 
     @Override
-    public void send(MemberEndpoint endpoint, AbstractMessage message) {
+    public void initialize() {
+    }
+
+    @Override
+    public <T extends AbstractMessage> void send(MemberEndpoint endpoint, T message) {
         messages.add(new Message(endpoint, message));
     }
 
     @Override
-    public <T extends AbstractMessage> void reply(RemoteMessage<T> remoteMessage, AbstractMessage response) {
+    public <M extends AbstractMessage, R extends AbstractMessage> void reply(RemoteMessage<M> remoteMessage, R response) {
         messages.add(new Message(remoteMessage.getSender(), response));
+    }
+
+    @Override
+    public void close() {
     }
 
     public List<Message> getMessages() {
@@ -40,6 +49,14 @@ public class MockTransporter implements Transporter {
 
         public AbstractMessage getPayload() {
             return payload;
+        }
+
+        @Override
+        public String toString() {
+            return "Message{" +
+                    "payload=" + payload +
+                    ", recipient=" + recipient +
+                    '}';
         }
 
     }

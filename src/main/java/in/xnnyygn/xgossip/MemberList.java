@@ -53,6 +53,19 @@ public class MemberList {
         return new UpdateResult(anyUpdated, snapshot.getDigest());
     }
 
+    public synchronized UpdateResult addAll(Collection<Member> members) {
+        boolean anyAdded = false;
+        for (Member member : members) {
+            if (doAdd(member)) {
+                anyAdded = true;
+            }
+        }
+        if (anyAdded) {
+            updateSnapshot();
+        }
+        return new UpdateResult(anyAdded, snapshot.getDigest());
+    }
+
     private boolean doMerge(Member member) {
         return doMerge(member, (oldMember) ->
                 oldMember.getTimeAdded() >= member.getTimeAdded() && oldMember.getTimeRemoved() >= member.getTimeRemoved()
@@ -71,11 +84,15 @@ public class MemberList {
     }
 
     public synchronized UpdateResult add(Member member) {
-        boolean added = doMerge(member, oldMember -> oldMember.getTimeAdded() >= member.getTimeAdded());
+        boolean added = doAdd(member);
         if (added) {
             updateSnapshot();
         }
         return new UpdateResult(added, snapshot.getDigest());
+    }
+
+    private boolean doAdd(Member member) {
+        return doMerge(member, oldMember -> oldMember.getTimeAdded() >= member.getTimeAdded());
     }
 
     @Nullable
@@ -94,14 +111,14 @@ public class MemberList {
     }
 
     @Nonnull
-    public Collection<MemberEndpoint> getRandomEndpointsExcept(int n, Set<MemberEndpoint> excludingEndpoints) {
+    public Set<MemberEndpoint> getRandomEndpointsExcept(int n, Set<MemberEndpoint> excludingEndpoints) {
         List<MemberEndpoint> availableMembers = snapshot.getMembers().stream()
                 .filter(m -> m.doesExist() && !excludingEndpoints.contains(m.getEndpoint()))
                 .map(Member::getEndpoint)
                 .collect(Collectors.toList());
         int nAvailable = availableMembers.size();
         if (nAvailable <= n) {
-            return availableMembers;
+            return new HashSet<>(availableMembers);
         }
         Set<MemberEndpoint> result = new HashSet<>();
         while (result.size() < n) {
@@ -122,10 +139,30 @@ public class MemberList {
         return snapshot.getMembers();
     }
 
+    @Nullable
+    public Member getSelf() {
+        for (Member member : snapshot.getMembers()) {
+            if (selfEndpoint.equals(member.getEndpoint())) {
+                return member;
+            }
+        }
+        return null;
+    }
+
     // within instance lock
     private void updateSnapshot() {
         Collection<Member> members = memberMap.values();
         snapshot = new Snapshot(new ArrayList<>(members), generateDigest(members));
+    }
+
+    @Override
+    public String toString() {
+        Snapshot snapshot = getSnapshot();
+        return "MemberList{" +
+                "selfEndpoint=" + selfEndpoint +
+                ", members=" + snapshot.getMembers() +
+                ", digest=" + Base64.getEncoder().encodeToString(snapshot.getDigest()) +
+                '}';
     }
 
     /**

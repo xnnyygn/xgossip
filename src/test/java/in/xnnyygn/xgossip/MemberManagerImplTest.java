@@ -43,10 +43,10 @@ public class MemberManagerImplTest {
         MockTransporter mockTransporter = (MockTransporter) context.getTransporter();
         assertEquals(1, mockTransporter.getMessages().size());
 
-        manager.onReceiveMemberJoinResponse(new MemberJoinResponse(Arrays.asList(
+        manager.onReceiveMemberJoinResponse(new RemoteMessage<>(new MemberJoinResponse(Arrays.asList(
                 new Member(new MemberEndpoint("localhost", 5303)),
                 new Member(new MemberEndpoint("localhost", 5304))
-        )));
+        )), new MemberEndpoint("localhost", 5303)));
         assertEquals(3, context.getMemberList().getAll().size());
     }
 
@@ -55,7 +55,7 @@ public class MemberManagerImplTest {
         MemberEndpoint endpoint1 = new MemberEndpoint("localhost", 5304);
         context.getMemberList().add(new Member(endpoint1));
         MemberEndpoint endpoint2 = new MemberEndpoint("localhost", 5303);
-        manager.onReceiveMemberJoinRpc(new RemoteMessage<>(new MemberJoinRpc(endpoint2), endpoint2));
+        manager.onReceiveMemberJoinRpc(new RemoteMessage<>(new MemberJoinRpc(endpoint2, System.currentTimeMillis()), endpoint2));
         MockTransporter mockTransporter = (MockTransporter) context.getTransporter();
         List<MockTransporter.Message> messages = mockTransporter.getMessages();
         assertEquals(2, messages.size());

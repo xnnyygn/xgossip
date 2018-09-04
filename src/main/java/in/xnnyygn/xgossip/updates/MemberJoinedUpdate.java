@@ -14,6 +14,11 @@ public class MemberJoinedUpdate extends AbstractUpdate {
         this.timeJoined = timeJoined;
     }
 
+    @Override
+    public boolean shouldFeedback() {
+        return true;
+    }
+
     public MemberJoinedUpdate(Member member) {
         this(member.getEndpoint(), member.getTimeAdded());
     }

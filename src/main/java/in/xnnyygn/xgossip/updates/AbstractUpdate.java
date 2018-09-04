@@ -12,4 +12,6 @@ public abstract class AbstractUpdate {
         return id;
     }
 
+    public abstract boolean shouldFeedback();
+
 }
