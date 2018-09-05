@@ -18,7 +18,7 @@ public interface MemberManager {
 
     void leave();
 
-    // TODO add listener
+    void addListener(MemberEventListener listener);
 
     void shutdown();
 

@@ -94,11 +94,20 @@ class FailureDetector {
         );
     }
 
-    void trustMember(MemberEndpoint endpoint) {
+    /**
+     * Try to trust member.
+     *
+     * @param endpoint endpoint
+     * @return true if member is suspected, otherwise false
+     */
+    boolean trustMember(MemberEndpoint endpoint) {
         if (!latencyRecorder.isLastPingFailed(endpoint)) {
-            return;
+            // last ping is ok
+            // member is not suspected
+            return false;
         }
         memberDeque.addFirst(endpoint);
+        return true;
     }
 
     void processNotifications(Collection<MemberNotification> notifications) {
@@ -141,14 +150,22 @@ class FailureDetector {
     }
 
     private void pingFailed(MemberEndpoint endpoint, long pingAt) {
-        logger.info("ping {} timeout", endpoint);
-        latencyRecorder.add(endpoint, pingAt, -1);
+        logger.debug("ping {} timeout", endpoint);
+        Long previousLatency = latencyRecorder.add(endpoint, pingAt, -1);
+        if (previousLatency == null || previousLatency >= 0) {
+            logger.info("member {} suspected", endpoint);
+            context.notifyChangeToListeners(new MemberEvent(endpoint, MemberEvent.Kind.SUSPECTED));
+        }
         context.getNotificationList().suspectMember(endpoint, pingAt, context.getSelfEndpoint());
         resetLastPing();
     }
 
     private void pingSuccess(MemberEndpoint endpoint, long pingAt, long latency) {
-        latencyRecorder.add(endpoint, pingAt, latency);
+        Long previousLatency = latencyRecorder.add(endpoint, pingAt, latency);
+        if (previousLatency != null && previousLatency < 0) {
+            logger.info("member {} backed", endpoint);
+            context.notifyChangeToListeners(new MemberEvent(endpoint, MemberEvent.Kind.BACKED));
+        }
         context.getNotificationList().trustMember(endpoint, pingAt, context.getSelfEndpoint());
         resetLastPing();
     }

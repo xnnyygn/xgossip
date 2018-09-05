@@ -4,10 +4,14 @@ import in.xnnyygn.xgossip.rpc.Transporter;
 import in.xnnyygn.xgossip.schedule.Scheduler;
 import in.xnnyygn.xgossip.support.MessageDispatcher;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class MemberListContext {
 
     private final UpdateList updateList = new UpdateList(5);
     private final NotificationList notificationList = new NotificationList(5);
+    private final List<MemberEventListener> memberEventListeners = new ArrayList<>();
     private MemberList memberList;
     private Scheduler scheduler;
     private MessageDispatcher messageDispatcher;
@@ -69,6 +73,22 @@ class MemberListContext {
 
     long getTimeStarted() {
         return timeStarted;
+    }
+
+    void addListener(MemberEventListener listener) {
+        memberEventListeners.add(listener);
+    }
+
+    void notifyChangeToListeners(MemberEvent event) {
+        for (MemberEventListener listener : memberEventListeners) {
+            listener.onChanged(event);
+        }
+    }
+
+    void notifyMergeToListeners() {
+        for (MemberEventListener listener : memberEventListeners) {
+            listener.onMerged();
+        }
     }
 
 }

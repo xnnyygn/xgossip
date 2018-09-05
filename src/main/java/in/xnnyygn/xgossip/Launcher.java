@@ -12,6 +12,17 @@ public class Launcher {
         }
         int port = Integer.parseInt(args[0]);
         MemberManager memberManager = new MemberManagerBuilder(new MemberEndpoint("localhost", port)).build();
+        memberManager.addListener(new MemberEventListener() {
+            @Override
+            public void onChanged(MemberEvent event) {
+                System.out.println("member " + event.getEndpoint() + " " + event.getKind() + ", available endpoints " + memberManager.listAvailableEndpoints());
+            }
+
+            @Override
+            public void onMerged() {
+                System.out.println("member list merged, available endpoints " + memberManager.listAvailableEndpoints());
+            }
+        });
         memberManager.initialize();
 
         List<MemberEndpoint> seedEndpoints = new ArrayList<>();
@@ -19,19 +30,7 @@ public class Launcher {
             seedEndpoints.add(parseEndpoint(args[i]));
         }
         memberManager.join(seedEndpoints);
-        Thread listThread = new Thread(() -> {
-            while (!Thread.currentThread().isInterrupted()) {
-                System.out.println("AVAILABLE ENDPOINTS => " + memberManager.listAvailableEndpoints());
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
-        });
-        listThread.start();
         System.in.read();
-        listThread.interrupt();
         memberManager.leave();
         memberManager.shutdown();
     }

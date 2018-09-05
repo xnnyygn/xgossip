@@ -22,13 +22,12 @@ public class NotificationList {
     }
 
     public synchronized void suspectMember(MemberEndpoint endpoint, long timestamp, MemberEndpoint by) {
-        logger.info("member {} suspected at {}", endpoint, timestamp);
         MemberState state = memberStateMap.get(endpoint);
         if (state == null) {
             memberStateMap.put(endpoint, new MemberState(endpoint, timestamp, by));
-        } else {
-            state.suspect(timestamp, by);
+            return;
         }
+        state.suspect(timestamp, by);
     }
 
     public synchronized void trustMember(MemberEndpoint endpoint, long timestamp, MemberEndpoint by) {
@@ -36,7 +35,6 @@ public class NotificationList {
         if (state == null) {
             return;
         }
-        logger.info("member {} trusted at {}", endpoint, timestamp);
         state.trust(timestamp, by);
     }
 
@@ -86,8 +84,6 @@ public class NotificationList {
         }
 
         void trust(long timestamp, MemberEndpoint by) {
-
-
             if (!suspected) {
                 return;
             }

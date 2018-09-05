@@ -5,6 +5,7 @@ import in.xnnyygn.xgossip.rpc.messages.*;
 import in.xnnyygn.xgossip.support.MessageDispatcher;
 import in.xnnyygn.xgossip.updates.AbstractUpdate;
 import in.xnnyygn.xgossip.updates.MemberJoinedUpdate;
+import in.xnnyygn.xgossip.updates.MemberLeavedUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,7 +95,19 @@ class MemberListExchanger {
         logger.debug("apply update {}", update);
         if (update instanceof MemberJoinedUpdate) {
             MemberJoinedUpdate memberJoinedUpdate = (MemberJoinedUpdate) update;
-            return context.getMemberList().add(memberJoinedUpdate.getEndpoint(), memberJoinedUpdate.getTimeJoined());
+            MemberList.UpdateResult result = context.getMemberList().add(memberJoinedUpdate.getEndpoint(), memberJoinedUpdate.getTimeJoined());
+            if (result.isUpdated()) {
+                context.notifyChangeToListeners(new MemberEvent(memberJoinedUpdate.getEndpoint(), MemberEvent.Kind.JOINED));
+            }
+            return result;
+        }
+        if (update instanceof MemberLeavedUpdate) {
+            MemberLeavedUpdate memberLeavedUpdate = (MemberLeavedUpdate) update;
+            MemberList.UpdateResult result = context.getMemberList().remove(memberLeavedUpdate.getEndpoint(), memberLeavedUpdate.getTimeLeaved());
+            if (result.isUpdated()) {
+                context.notifyChangeToListeners(new MemberEvent(memberLeavedUpdate.getEndpoint(), MemberEvent.Kind.LEAVED));
+            }
+            return result;
         }
         throw new IllegalArgumentException("unsupported update " + update);
     }
@@ -171,6 +184,7 @@ class MemberListExchanger {
         logger.debug("exchanging with {}, {}", message.getSender(), response);
         feedback(response.getUpdatedMap());
         MemberList.UpdateResult result = context.getMemberList().mergeAll(response.getMembers());
+        context.notifyMergeToListeners();
         if (Arrays.equals(result.getDigest(), response.getMembersDigest())) {
 
             // 1. merged and agree

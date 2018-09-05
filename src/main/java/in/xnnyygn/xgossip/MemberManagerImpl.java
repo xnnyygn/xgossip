@@ -7,9 +7,7 @@ import in.xnnyygn.xgossip.support.MessageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 class MemberManagerImpl implements MemberManager {
@@ -80,6 +78,8 @@ class MemberManagerImpl implements MemberManager {
 
     @Override
     public void join(Collection<MemberEndpoint> seedEndpoints) {
+        context.notifyChangeToListeners(new MemberEvent(context.getSelfEndpoint(), MemberEvent.Kind.JOINED));
+
         // maybe the first member in cluster
         if (seedEndpoints.isEmpty()) {
             return;
@@ -96,16 +96,14 @@ class MemberManagerImpl implements MemberManager {
     void onReceiveMemberJoinRpc(RemoteMessage<MemberJoinRpc> message) {
         MemberJoinRpc rpc = message.get();
         MemberList.UpdateResult result = context.getMemberList().add(rpc.getEndpoint(), rpc.getTimeJoined());
-
         context.getTransporter().reply(message, new MemberJoinResponse(context.getMemberList().getAll()));
-
-        failureDetector.trustMember(rpc.getEndpoint());
-
-        if (!result.isUpdated()) {
+        boolean memberWasSuspected = failureDetector.trustMember(rpc.getEndpoint());
+        if (memberWasSuspected) {
+            logger.info("member {} backed", rpc.getEndpoint());
             return;
         }
-
         logger.info("member {} joined", rpc.getEndpoint());
+        context.notifyChangeToListeners(new MemberEvent(rpc.getEndpoint(), MemberEvent.Kind.JOINED));
         context.getUpdateList().memberJoined(rpc.getEndpoint(), rpc.getTimeJoined());
         spreadUpdatesExcept(rpc.getEndpoint());
     }
@@ -127,7 +125,7 @@ class MemberManagerImpl implements MemberManager {
 
     @Override
     public void leave() {
-        Set<MemberEndpoint> endpoints = context.getMemberList().getRandomEndpointsExcept(3, Sets.union(
+        Set<MemberEndpoint> endpoints = context.getMemberList().getRandomEndpointsExcept(1, Sets.union(
                 Collections.singleton(context.getSelfEndpoint()),
                 failureDetector.listSuspectedMembers()
         ));
@@ -148,8 +146,14 @@ class MemberManagerImpl implements MemberManager {
             return;
         }
         logger.info("member {} leaved", rpc.getEndpoint());
+        context.notifyChangeToListeners(new MemberEvent(rpc.getEndpoint(), MemberEvent.Kind.LEAVED));
         context.getUpdateList().memberLeaved(rpc.getEndpoint(), rpc.getTimeLeaved());
         spreadUpdatesExcept(rpc.getEndpoint());
+    }
+
+    @Override
+    public void addListener(MemberEventListener listener) {
+        context.addListener(listener);
     }
 
     @Override
