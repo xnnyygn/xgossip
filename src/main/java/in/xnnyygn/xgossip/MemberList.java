@@ -54,7 +54,7 @@ public class MemberList {
                     Math.max((oldMember != null ? oldMember.getTimeAdded() : 0), member.getTimeAdded()),
                     Math.max((oldMember != null ? oldMember.getTimeRemoved() : 0), member.getTimeRemoved())
             );
-            logger.info("update member {}", newMember);
+            logger.debug("update member {}", newMember);
             memberMap.put(endpoint, newMember);
             anyUpdated = true;
         }
@@ -70,7 +70,7 @@ public class MemberList {
             return new UpdateResult(false, snapshot.getDigest());
         }
         Member newMember = new Member(endpoint, timeAdded, (member != null ? member.getTimeRemoved() : 0));
-        logger.info("update member {}", newMember);
+        logger.debug("update member {}", newMember);
         memberMap.put(endpoint, newMember);
         updateSnapshot();
         return new UpdateResult(true, snapshot.getDigest());
@@ -84,7 +84,7 @@ public class MemberList {
                 continue;
             }
             Member newMember = new Member(endpoint, timeAdded, (member != null ? member.getTimeRemoved() : 0));
-            logger.info("update member {}", newMember);
+            logger.debug("update member {}", newMember);
             memberMap.put(endpoint, newMember);
             anyAdded = true;
         }
@@ -100,7 +100,7 @@ public class MemberList {
             return new UpdateResult(false, snapshot.getDigest());
         }
         Member newMember = new Member(endpoint, (member != null ? member.getTimeAdded() : 0), timeRemoved);
-        logger.info("update member {}", newMember);
+        logger.debug("update member {}", newMember);
         memberMap.put(endpoint, newMember);
         updateSnapshot();
         return new UpdateResult(true, snapshot.getDigest());
