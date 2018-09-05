@@ -24,7 +24,7 @@ public class MemberManagerImplTest {
         context = new MemberListContext();
         context.setTransporter(new MockTransporter());
         context.setSelfEndpoint(selfEndpoint);
-        context.setMemberList(new MemberList(new Member(selfEndpoint)));
+        context.setMemberList(new MemberList(selfEndpoint, System.currentTimeMillis()));
 
         manager = new MemberManagerImpl(context);
     }
@@ -53,7 +53,7 @@ public class MemberManagerImplTest {
     @Test
     public void testJoinRoleSeed() {
         MemberEndpoint endpoint1 = new MemberEndpoint("localhost", 5304);
-        context.getMemberList().add(new Member(endpoint1));
+        context.getMemberList().add(endpoint1, System.currentTimeMillis());
         MemberEndpoint endpoint2 = new MemberEndpoint("localhost", 5303);
         manager.onReceiveMemberJoinRpc(new RemoteMessage<>(new MemberJoinRpc(endpoint2, System.currentTimeMillis()), endpoint2));
         MockTransporter mockTransporter = (MockTransporter) context.getTransporter();

@@ -10,7 +10,6 @@ import javax.annotation.concurrent.ThreadSafe;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @ThreadSafe
@@ -23,11 +22,11 @@ public class MemberList {
     private final MemberEndpoint selfEndpoint;
     private volatile Snapshot snapshot;
 
-    public MemberList(Member self) {
-        memberMap.put(self.getEndpoint(), self);
-        Collection<Member> members = Collections.singletonList(self);
-        snapshot = new Snapshot(members, generateDigest(members));
-        selfEndpoint = self.getEndpoint();
+    public MemberList(MemberEndpoint selfEndpoint, long timestamp) {
+        this.selfEndpoint = selfEndpoint;
+        Member self = new Member(selfEndpoint, timestamp, 0);
+        memberMap.put(selfEndpoint, self);
+        updateSnapshot();
     }
 
     public static byte[] generateDigest(Collection<Member> members) {
@@ -43,9 +42,21 @@ public class MemberList {
     public synchronized UpdateResult mergeAll(Collection<Member> members) {
         boolean anyUpdated = false;
         for (Member member : members) {
-            if (doMerge(member)) {
-                anyUpdated = true;
+            MemberEndpoint endpoint = member.getEndpoint();
+            Member oldMember = memberMap.get(endpoint);
+            if (oldMember != null &&
+                    oldMember.getTimeAdded() >= member.getTimeAdded() &&
+                    oldMember.getTimeRemoved() >= member.getTimeRemoved()) {
+                continue;
             }
+            Member newMember = new Member(
+                    endpoint,
+                    Math.max((oldMember != null ? oldMember.getTimeAdded() : 0), member.getTimeAdded()),
+                    Math.max((oldMember != null ? oldMember.getTimeRemoved() : 0), member.getTimeRemoved())
+            );
+            logger.info("update member {}", newMember);
+            memberMap.put(endpoint, newMember);
+            anyUpdated = true;
         }
         if (anyUpdated) {
             updateSnapshot();
@@ -53,12 +64,29 @@ public class MemberList {
         return new UpdateResult(anyUpdated, snapshot.getDigest());
     }
 
-    public synchronized UpdateResult addAll(Collection<Member> members) {
+    public synchronized UpdateResult add(MemberEndpoint endpoint, long timeAdded) {
+        Member member = memberMap.get(endpoint);
+        if (member != null && member.getTimeAdded() >= timeAdded) {
+            return new UpdateResult(false, snapshot.getDigest());
+        }
+        Member newMember = new Member(endpoint, timeAdded, (member != null ? member.getTimeRemoved() : 0));
+        logger.info("update member {}", newMember);
+        memberMap.put(endpoint, newMember);
+        updateSnapshot();
+        return new UpdateResult(true, snapshot.getDigest());
+    }
+
+    public synchronized UpdateResult addAll(Collection<MemberEndpoint> endpoints, long timeAdded) {
         boolean anyAdded = false;
-        for (Member member : members) {
-            if (doAdd(member)) {
-                anyAdded = true;
+        for (MemberEndpoint endpoint : endpoints) {
+            Member member = memberMap.get(endpoint);
+            if (member != null && member.getTimeAdded() >= timeAdded) {
+                continue;
             }
+            Member newMember = new Member(endpoint, timeAdded, (member != null ? member.getTimeRemoved() : 0));
+            logger.info("update member {}", newMember);
+            memberMap.put(endpoint, newMember);
+            anyAdded = true;
         }
         if (anyAdded) {
             updateSnapshot();
@@ -66,33 +94,16 @@ public class MemberList {
         return new UpdateResult(anyAdded, snapshot.getDigest());
     }
 
-    private boolean doMerge(Member member) {
-        return doMerge(member, (oldMember) ->
-                oldMember.getTimeAdded() >= member.getTimeAdded() && oldMember.getTimeRemoved() >= member.getTimeRemoved()
-        );
-    }
-
-    private boolean doMerge(Member member, Function<Member, Boolean> f) {
-        Member oldMember = memberMap.get(member.getEndpoint());
-        if (oldMember != null
-                && f.apply(oldMember)) {
-            return false;
+    public synchronized UpdateResult remove(MemberEndpoint endpoint, long timeRemoved) {
+        Member member = memberMap.get(endpoint);
+        if (member != null && member.getTimeRemoved() >= timeRemoved) {
+            return new UpdateResult(false, snapshot.getDigest());
         }
-        logger.info("update member {}", member);
-        memberMap.put(member.getEndpoint(), member);
-        return true;
-    }
-
-    public synchronized UpdateResult add(Member member) {
-        boolean added = doAdd(member);
-        if (added) {
-            updateSnapshot();
-        }
-        return new UpdateResult(added, snapshot.getDigest());
-    }
-
-    private boolean doAdd(Member member) {
-        return doMerge(member, oldMember -> oldMember.getTimeAdded() >= member.getTimeAdded());
+        Member newMember = new Member(endpoint, (member != null ? member.getTimeAdded() : 0), timeRemoved);
+        logger.info("update member {}", newMember);
+        memberMap.put(endpoint, newMember);
+        updateSnapshot();
+        return new UpdateResult(true, snapshot.getDigest());
     }
 
     @Nullable
@@ -139,17 +150,6 @@ public class MemberList {
         return snapshot.getMembers();
     }
 
-    @Nullable
-    public Member getSelf() {
-        for (Member member : snapshot.getMembers()) {
-            if (selfEndpoint.equals(member.getEndpoint())) {
-                return member;
-            }
-        }
-        return null;
-    }
-
-    // within instance lock
     private void updateSnapshot() {
         Collection<Member> members = memberMap.values();
         snapshot = new Snapshot(new ArrayList<>(members), generateDigest(members));

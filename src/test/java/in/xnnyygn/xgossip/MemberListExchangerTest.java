@@ -22,7 +22,7 @@ public class MemberListExchangerTest {
         context = new MemberListContext();
         context.setTransporter(new MockTransporter());
         context.setSelfEndpoint(selfEndpoint);
-        context.setMemberList(new MemberList(new Member(selfEndpoint)));
+        context.setMemberList(new MemberList(selfEndpoint, System.currentTimeMillis()));
 
         exchanger = new MemberListExchanger(context);
     }
@@ -54,7 +54,7 @@ public class MemberListExchangerTest {
     // local update present
     @Test
     public void testOnReceiveMemberUpdatesRpcNoUpdate2() {
-        context.getUpdateList().prepend(new MemberJoinedUpdate(new MemberEndpoint("localhost", 5304), System.currentTimeMillis()));
+        context.getUpdateList().memberJoined(new MemberEndpoint("localhost", 5304), System.currentTimeMillis());
         MemberUpdatesRpc rpc = new MemberUpdatesRpc(Collections.emptyList(), new byte[0]);
         exchanger.onReceiveMemberUpdatesRpc(new RemoteMessage<>(rpc, new MemberEndpoint("localhost", 5303)));
         MockTransporter mockTransporter = (MockTransporter) context.getTransporter();
@@ -99,7 +99,7 @@ public class MemberListExchangerTest {
     // case 4
     @Test
     public void testOnReceiveMemberUpdatesRpcApplyButFailed2() {
-        context.getUpdateList().prepend(new MemberJoinedUpdate(new MemberEndpoint("localhost", 5305), System.currentTimeMillis()));
+        context.getUpdateList().memberJoined(new MemberEndpoint("localhost", 5305), System.currentTimeMillis());
         Member newMember = new Member(new MemberEndpoint("localhost", 5304));
         MemberUpdatesRpc rpc = new MemberUpdatesRpc(Collections.singletonList(
                 new MemberJoinedUpdate(10, newMember.getEndpoint(), newMember.getTimeAdded())
@@ -114,8 +114,8 @@ public class MemberListExchangerTest {
 
     @Test
     public void testOnReceiveMemberUpdatesAgreedResponse() {
-        long updateId1 = context.getUpdateList().prepend(new MemberJoinedUpdate(new MemberEndpoint("localhost", 5304), System.currentTimeMillis()));
-        long updateId2 = context.getUpdateList().prepend(new MemberJoinedUpdate(new MemberEndpoint("localhost", 5305), System.currentTimeMillis()));
+        long updateId1 = context.getUpdateList().memberJoined(new MemberEndpoint("localhost", 5304), System.currentTimeMillis());
+        long updateId2 = context.getUpdateList().memberJoined(new MemberEndpoint("localhost", 5305), System.currentTimeMillis());
         Map<Long, Boolean> updatedMap = new HashMap<>();
         updatedMap.put(updateId1, true);
         updatedMap.put(updateId2, false);
@@ -180,7 +180,7 @@ public class MemberListExchangerTest {
         MemberUpdatesResponse response = new MemberUpdatesResponse(
                 System.currentTimeMillis(),
                 Collections.emptyMap(),
-                Collections.singletonList(new MemberJoinedUpdate(newMember.getEndpoint(), newMember.getTimeAdded())),
+                Collections.singletonList(new MemberJoinedUpdate(1, newMember.getEndpoint(), newMember.getTimeAdded())),
                 MemberList.generateDigest(Arrays.asList(
                         context.getMemberList().getAll().iterator().next(),
                         newMember
@@ -200,7 +200,7 @@ public class MemberListExchangerTest {
         MemberUpdatesResponse response = new MemberUpdatesResponse(
                 System.currentTimeMillis(),
                 Collections.emptyMap(),
-                Collections.singletonList(new MemberJoinedUpdate(newMember.getEndpoint(), newMember.getTimeAdded())),
+                Collections.singletonList(new MemberJoinedUpdate(1, newMember.getEndpoint(), newMember.getTimeAdded())),
                 new byte[0]
         );
         exchanger.onReceiveMemberUpdatesResponse(new RemoteMessage<>(response, new MemberEndpoint("localhost", 5303)));
@@ -213,12 +213,12 @@ public class MemberListExchangerTest {
     // case 3
     @Test
     public void testOnReceiveMemberUpdatesResponseWithLocalUpdate() {
-        context.getUpdateList().prepend(new MemberJoinedUpdate(new MemberEndpoint("localhost", 5304), System.currentTimeMillis()));
+        context.getUpdateList().memberJoined(new MemberEndpoint("localhost", 5304), System.currentTimeMillis());
         Member newMember = new Member(new MemberEndpoint("localhost", 5303));
         MemberUpdatesResponse response = new MemberUpdatesResponse(
                 System.currentTimeMillis(),
                 Collections.emptyMap(),
-                Collections.singletonList(new MemberJoinedUpdate(newMember.getEndpoint(), newMember.getTimeAdded())),
+                Collections.singletonList(new MemberJoinedUpdate(1, newMember.getEndpoint(), newMember.getTimeAdded())),
                 new byte[0]
         );
         exchanger.onReceiveMemberUpdatesResponse(new RemoteMessage<>(response, new MemberEndpoint("localhost", 5303)));
@@ -230,12 +230,12 @@ public class MemberListExchangerTest {
 
     @Test
     public void testOnReceiveMemberUpdatesResponseHopExceed() {
-        context.getUpdateList().prepend(new MemberJoinedUpdate(new MemberEndpoint("localhost", 5304), System.currentTimeMillis()));
+        context.getUpdateList().memberJoined(new MemberEndpoint("localhost", 5304), System.currentTimeMillis());
         Member newMember = new Member(new MemberEndpoint("localhost", 5303));
         MemberUpdatesResponse response = new MemberUpdatesResponse(
                 System.currentTimeMillis(),
                 Collections.emptyMap(),
-                Collections.singletonList(new MemberJoinedUpdate(newMember.getEndpoint(), newMember.getTimeAdded())),
+                Collections.singletonList(new MemberJoinedUpdate(1, newMember.getEndpoint(), newMember.getTimeAdded())),
                 new byte[0],
                 11
         );

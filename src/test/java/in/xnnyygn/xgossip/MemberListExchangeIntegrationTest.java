@@ -28,12 +28,12 @@ public class MemberListExchangeIntegrationTest {
         Member member2 = new Member(new MemberEndpoint("localhost", 5303));
 
         context1 = buildContext(member1, transporterRegister);
-        context1.getMemberList().add(member2);
+        context1.getMemberList().add(member2.getEndpoint(), member2.getTimeAdded());
         exchanger1 = new MemberListExchanger(context1);
         exchanger1.initialize();
 
         context2 = buildContext(member2, transporterRegister);
-        context2.getMemberList().add(member1);
+        context2.getMemberList().add(member1.getEndpoint(), member1.getTimeAdded());
         exchanger2 = new MemberListExchanger(context2);
         exchanger2.initialize();
     }
@@ -45,7 +45,7 @@ public class MemberListExchangeIntegrationTest {
 
         MemberListContext context = new MemberListContext();
         context.setSelfEndpoint(member.getEndpoint());
-        context.setMemberList(new MemberList(member));
+        context.setMemberList(new MemberList(member.getEndpoint(), member.getTimeAdded()));
         context.setMessageDispatcher(messageDispatcher);
         context.setTransporter(transporter);
         return context;
@@ -79,8 +79,8 @@ public class MemberListExchangeIntegrationTest {
     @Test
     public void testLocalIsNewer() {
         Member member = new Member(new MemberEndpoint("localhost", 5304));
-        context1.getMemberList().add(member);
-        context1.getUpdateList().prepend(new MemberJoinedUpdate(member));
+        context1.getMemberList().add(member.getEndpoint(), member.getTimeAdded());
+        context1.getUpdateList().memberJoined(member.getEndpoint(), member.getTimeAdded());
 
         spreadUpdates();
 
@@ -95,8 +95,8 @@ public class MemberListExchangeIntegrationTest {
     @Test
     public void testRemoteIsNewer() {
         Member member = new Member(new MemberEndpoint("localhost", 5304));
-        context2.getMemberList().add(member);
-        context2.getUpdateList().prepend(new MemberJoinedUpdate(member));
+        context2.getMemberList().add(member.getEndpoint(), member.getTimeAdded());
+        context2.getUpdateList().memberJoined(member.getEndpoint(), member.getTimeAdded());
 
         spreadUpdates();
 
@@ -112,7 +112,7 @@ public class MemberListExchangeIntegrationTest {
     @Test
     public void testLocalIsNewerNoUpdate() {
         Member member = new Member(new MemberEndpoint("localhost", 5304));
-        context1.getMemberList().add(member);
+        context1.getMemberList().add(member.getEndpoint(), member.getTimeAdded());
 
         spreadUpdates();
 
@@ -129,7 +129,7 @@ public class MemberListExchangeIntegrationTest {
     @Test
     public void testRemoteIsNewerNoUpdate() {
         Member member = new Member(new MemberEndpoint("localhost", 5304));
-        context2.getMemberList().add(member);
+        context2.getMemberList().add(member.getEndpoint(), member.getTimeAdded());
 
         spreadUpdates();
         // -> MemberUpdatesRpc
@@ -143,8 +143,8 @@ public class MemberListExchangeIntegrationTest {
     // remote: (1, 2, 4)
     @Test
     public void testDifferentNoUpdate() {
-        context1.getMemberList().add(new Member(new MemberEndpoint("localhost", 5304)));
-        context2.getMemberList().add(new Member(new MemberEndpoint("localhost", 5305)));
+        context1.getMemberList().add(new MemberEndpoint("localhost", 5304), System.currentTimeMillis());
+        context2.getMemberList().add(new MemberEndpoint("localhost", 5305), System.currentTimeMillis());
 
         spreadUpdates();
         // -> MemberUpdatesRpc
@@ -160,9 +160,9 @@ public class MemberListExchangeIntegrationTest {
     @Test
     public void testDifferent2() {
         Member member = new Member(new MemberEndpoint("localhost", 5304));
-        context1.getMemberList().add(member);
-        context1.getUpdateList().prepend(new MemberJoinedUpdate(member));
-        context2.getMemberList().add(new Member(new MemberEndpoint("localhost", 5305)));
+        context1.getMemberList().add(member.getEndpoint(), member.getTimeAdded());
+        context1.getUpdateList().memberJoined(member.getEndpoint(), member.getTimeAdded());
+        context2.getMemberList().add(new MemberEndpoint("localhost", 5305), System.currentTimeMillis());
 
         spreadUpdates();
         // -> MemberUpdatesRpc
@@ -177,11 +177,11 @@ public class MemberListExchangeIntegrationTest {
     @Test
     public void testDifferent3() {
         Member member1 = new Member(new MemberEndpoint("localhost", 5304));
-        context1.getMemberList().add(member1);
-        context1.getUpdateList().prepend(new MemberJoinedUpdate(member1));
+        context1.getMemberList().add(member1.getEndpoint(), member1.getTimeAdded());
+        context1.getUpdateList().memberJoined(member1.getEndpoint(), member1.getTimeAdded());
         Member member2 = new Member(new MemberEndpoint("localhost", 5305));
-        context2.getMemberList().add(member2);
-        context2.getUpdateList().prepend(new MemberJoinedUpdate(member2));
+        context2.getMemberList().add(member2.getEndpoint(), member2.getTimeAdded());
+        context2.getUpdateList().memberJoined(member2.getEndpoint(), member2.getTimeAdded());
 
         spreadUpdates();
 

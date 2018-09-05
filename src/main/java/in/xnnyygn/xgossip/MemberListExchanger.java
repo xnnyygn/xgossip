@@ -83,7 +83,7 @@ class MemberListExchanger {
             MemberList.UpdateResult result = processUpdate(update);
             updatedMap.put(update.getId(), result.isUpdated());
             if (result.isUpdated()) {
-                localUpdateIds.add(context.getUpdateList().prepend(update));
+                localUpdateIds.add(context.getUpdateList().add(update));
             }
             lastDigest = result.getDigest();
         }
@@ -94,9 +94,7 @@ class MemberListExchanger {
         logger.debug("apply update {}", update);
         if (update instanceof MemberJoinedUpdate) {
             MemberJoinedUpdate memberJoinedUpdate = (MemberJoinedUpdate) update;
-            return context.getMemberList().add(
-                    new Member(memberJoinedUpdate.getEndpoint(), memberJoinedUpdate.getTimeJoined())
-            );
+            return context.getMemberList().add(memberJoinedUpdate.getEndpoint(), memberJoinedUpdate.getTimeJoined());
         }
         throw new IllegalArgumentException("unsupported update " + update);
     }
@@ -105,7 +103,7 @@ class MemberListExchanger {
     void onReceiveMemberUpdatesAgreedResponse(RemoteMessage<MemberUpdatesAgreedResponse> message) {
         MemberUpdatesAgreedResponse response = message.get();
         feedback(response.getUpdatedMap());
-        logger.info("exchange done with {}", message.getSender());
+        logger.debug("exchange done with {}", message.getSender());
     }
 
     private void feedback(Map<Long, Boolean> updatedMap) {
@@ -202,7 +200,7 @@ class MemberListExchanger {
 
     // subscriber
     private void onReceiveMembersMergedResponse(RemoteMessage<MembersMergedResponse> message) {
-        logger.info("exchange done with {}", message.getSender());
+        logger.debug("exchange done with {}", message.getSender());
     }
 
     private static class MultiUpdateResult {

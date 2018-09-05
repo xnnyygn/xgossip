@@ -14,15 +14,15 @@ import java.util.stream.Collectors;
 public class NotificationList {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationList.class);
-    private final int threshold;
+    private final int countThreshold;
     private final Map<MemberEndpoint, MemberState> memberStateMap = new HashMap<>();
 
-    public NotificationList(int threshold) {
-        this.threshold = threshold;
+    public NotificationList(int countThreshold) {
+        this.countThreshold = countThreshold;
     }
 
     public synchronized void suspectMember(MemberEndpoint endpoint, long timestamp, MemberEndpoint by) {
-        logger.info("suspect member {} by {}", endpoint, by);
+        logger.info("member {} suspected at {}", endpoint, timestamp);
         MemberState state = memberStateMap.get(endpoint);
         if (state == null) {
             memberStateMap.put(endpoint, new MemberState(endpoint, timestamp, by));
@@ -36,7 +36,7 @@ public class NotificationList {
         if (state == null) {
             return;
         }
-        logger.info("trust member {} by {}", endpoint, by);
+        logger.info("member {} trusted at {}", endpoint, timestamp);
         state.trust(timestamp, by);
     }
 
@@ -45,20 +45,12 @@ public class NotificationList {
         List<MemberNotification> result = new ArrayList<>();
         for (MemberState state : states) {
             result.add(state.toNotification());
-            if (state.increaseAndGetCount() >= threshold) {
-                logger.debug("remove notification of {}", state.getEndpoint());
+            if (state.increaseAndGetCount() >= countThreshold) {
+                logger.debug("remove notification for {}", state.getEndpoint());
                 memberStateMap.remove(state.getEndpoint());
             }
         }
         return result;
-    }
-
-    public void add(MemberNotification notification) {
-        if (notification.isSuspected()) {
-            suspectMember(notification.getEndpoint(), notification.getTimestamp(), notification.getBy());
-        } else {
-            trustMember(notification.getEndpoint(), notification.getTimestamp(), notification.getBy());
-        }
     }
 
     private static class MemberState {
@@ -94,6 +86,8 @@ public class NotificationList {
         }
 
         void trust(long timestamp, MemberEndpoint by) {
+
+
             if (!suspected) {
                 return;
             }

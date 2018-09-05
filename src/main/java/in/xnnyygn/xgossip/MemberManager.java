@@ -1,6 +1,7 @@
 package in.xnnyygn.xgossip;
 
 import java.util.Collection;
+import java.util.Set;
 
 public interface MemberManager {
 
@@ -8,9 +9,14 @@ public interface MemberManager {
 
     void join(Collection<MemberEndpoint> seedEndpoints);
 
-    // TODO get alive members, with self?
+    /**
+     * List available members' endpoints.
+     *
+     * @return collection of endpoints
+     */
+    Set<MemberEndpoint> listAvailableEndpoints();
 
-    // TODO leave
+    void leave();
 
     // TODO add listener
 

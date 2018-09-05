@@ -2,18 +2,14 @@ package in.xnnyygn.xgossip;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import in.xnnyygn.xgossip.rpc.messages.MemberJoinResponse;
-import in.xnnyygn.xgossip.rpc.messages.MemberJoinRpc;
-import in.xnnyygn.xgossip.rpc.messages.MemberUpdatesRpc;
-import in.xnnyygn.xgossip.rpc.messages.RemoteMessage;
+import in.xnnyygn.xgossip.rpc.messages.*;
 import in.xnnyygn.xgossip.support.MessageDispatcher;
-import in.xnnyygn.xgossip.updates.MemberJoinedUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 class MemberManagerImpl implements MemberManager {
@@ -36,6 +32,7 @@ class MemberManagerImpl implements MemberManager {
         dispatcher.register(MemberUpdatesRpc.class, this::onReceiveMemberUpdatesRpc);
         dispatcher.register(MemberJoinRpc.class, this::onReceiveMemberJoinRpc);
         dispatcher.register(MemberJoinResponse.class, this::onReceiveMemberJoinResponse);
+        dispatcher.register(MemberLeavedRpc.class, this::onReceiveMemberLeavedRpc);
 
         memberListExchanger.initialize();
         failureDetector.initialize();
@@ -67,7 +64,7 @@ class MemberManagerImpl implements MemberManager {
         }
         MemberUpdatesRpc rpc = new MemberUpdatesRpc(
                 context.getUpdateList().take(1),
-                Collections.emptyList(),
+                context.getNotificationList().take(1),
                 context.getMemberList().getDigest()
         );
         for (MemberEndpoint endpoint : endpoints) {
@@ -88,42 +85,71 @@ class MemberManagerImpl implements MemberManager {
             return;
         }
         logger.info("join with seeds {}", seedEndpoints);
-        Member self = context.getMemberList().getSelf();
-        if (self == null) {
-            logger.warn("not in member list");
-            return;
+        MemberJoinRpc rpc = new MemberJoinRpc(context.getSelfEndpoint(), context.getTimeStarted());
+        context.getMemberList().addAll(seedEndpoints, 0);
+        for (MemberEndpoint endpoint : seedEndpoints) {
+            context.getTransporter().send(endpoint, rpc);
         }
-        MemberJoinRpc rpc = new MemberJoinRpc(self.getEndpoint(), self.getTimeAdded());
-        List<Member> seedMembers = seedEndpoints.stream()
-                .map(e -> new Member(e, 0))
-                .collect(Collectors.toList());
-        context.getMemberList().addAll(seedMembers);
-        seedMembers.forEach(m -> context.getTransporter().send(m.getEndpoint(), rpc));
     }
 
     // subscriber
     void onReceiveMemberJoinRpc(RemoteMessage<MemberJoinRpc> message) {
         MemberJoinRpc rpc = message.get();
-        Member member = new Member(rpc.getEndpoint(), rpc.getTimeJoined());
-        MemberList.UpdateResult result = context.getMemberList().add(member);
+        MemberList.UpdateResult result = context.getMemberList().add(rpc.getEndpoint(), rpc.getTimeJoined());
 
-        // reply to sender
         context.getTransporter().reply(message, new MemberJoinResponse(context.getMemberList().getAll()));
+
+        failureDetector.trustMember(rpc.getEndpoint());
 
         if (!result.isUpdated()) {
             return;
         }
 
-        // add to update list
-        context.getUpdateList().prepend(new MemberJoinedUpdate(member));
-
-        spreadUpdatesExcept(member.getEndpoint());
+        logger.info("member {} joined", rpc.getEndpoint());
+        context.getUpdateList().memberJoined(rpc.getEndpoint(), rpc.getTimeJoined());
+        spreadUpdatesExcept(rpc.getEndpoint());
     }
 
     // subscriber
     void onReceiveMemberJoinResponse(RemoteMessage<MemberJoinResponse> message) {
         MemberJoinResponse response = message.get();
         context.getMemberList().mergeAll(response.getMembers());
+    }
+
+    @Override
+    public Set<MemberEndpoint> listAvailableEndpoints() {
+        Set<MemberEndpoint> suspected = failureDetector.listSuspectedMembers();
+        return context.getMemberList().getAll().stream()
+                .filter(m -> m.doesExist() && !suspected.contains(m.getEndpoint()))
+                .map(Member::getEndpoint)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public void leave() {
+        Set<MemberEndpoint> endpoints = context.getMemberList().getRandomEndpointsExcept(3, Sets.union(
+                Collections.singleton(context.getSelfEndpoint()),
+                failureDetector.listSuspectedMembers()
+        ));
+        if (endpoints.isEmpty()) {
+            logger.info("leave without telling anyone");
+            return;
+        }
+        MemberLeavedRpc rpc = new MemberLeavedRpc(context.getSelfEndpoint(), System.currentTimeMillis());
+        for (MemberEndpoint endpoint : endpoints) {
+            context.getTransporter().send(endpoint, rpc);
+        }
+    }
+
+    private void onReceiveMemberLeavedRpc(RemoteMessage<MemberLeavedRpc> message) {
+        MemberLeavedRpc rpc = message.get();
+        MemberList.UpdateResult result = context.getMemberList().remove(rpc.getEndpoint(), rpc.getTimeLeaved());
+        if (!result.isUpdated()) {
+            return;
+        }
+        logger.info("member {} leaved", rpc.getEndpoint());
+        context.getUpdateList().memberLeaved(rpc.getEndpoint(), rpc.getTimeLeaved());
+        spreadUpdatesExcept(rpc.getEndpoint());
     }
 
     @Override

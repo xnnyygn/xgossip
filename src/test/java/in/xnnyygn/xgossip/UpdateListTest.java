@@ -15,7 +15,7 @@ public class UpdateListTest {
     @Test
     public void testTake() {
         UpdateList list = new UpdateList(10);
-        long updateId = list.prepend(new MemberJoinedUpdate(new MemberEndpoint("localhost", 5302), System.currentTimeMillis()));
+        long updateId = list.memberJoined(new MemberEndpoint("localhost", 5302), System.currentTimeMillis());
         List<AbstractUpdate> updates = list.take(2);
         assertEquals(1, updates.size());
         assertEquals(updateId, updates.get(0).getId());
@@ -25,9 +25,9 @@ public class UpdateListTest {
     @Test
     public void testTakeSorted() {
         UpdateList list = new UpdateList(10);
-        long updateId1 = list.prepend(new MemberJoinedUpdate(new MemberEndpoint("localhost", 5302), System.currentTimeMillis()));
-        long updateId2 = list.prepend(new MemberJoinedUpdate(new MemberEndpoint("localhost", 5303), System.currentTimeMillis()));
-        long updateId3 = list.prepend(new MemberJoinedUpdate(new MemberEndpoint("localhost", 5304), System.currentTimeMillis()));
+        long updateId1 = list.memberJoined(new MemberEndpoint("localhost", 5302), System.currentTimeMillis());
+        long updateId2 = list.memberJoined(new MemberEndpoint("localhost", 5303), System.currentTimeMillis());
+        long updateId3 = list.memberJoined(new MemberEndpoint("localhost", 5304), System.currentTimeMillis());
         list.decreaseUsefulness(updateId2);
         list.decreaseUsefulness(updateId3);
         list.decreaseUsefulness(updateId3);
@@ -41,9 +41,9 @@ public class UpdateListTest {
     @Test
     public void takeExcept() {
         UpdateList list = new UpdateList(10);
-        long updateId1 = list.prepend(new MemberJoinedUpdate(new MemberEndpoint("localhost", 5302), System.currentTimeMillis()));
-        long updateId2 = list.prepend(new MemberJoinedUpdate(new MemberEndpoint("localhost", 5303), System.currentTimeMillis()));
-        long updateId3 = list.prepend(new MemberJoinedUpdate(new MemberEndpoint("localhost", 5304), System.currentTimeMillis()));
+        long updateId1 = list.memberJoined(new MemberEndpoint("localhost", 5302), System.currentTimeMillis());
+        long updateId2 = list.memberJoined(new MemberEndpoint("localhost", 5303), System.currentTimeMillis());
+        long updateId3 = list.memberJoined(new MemberEndpoint("localhost", 5304), System.currentTimeMillis());
         List<AbstractUpdate> updates = list.takeExcept(2, ImmutableSet.of(updateId1, updateId3));
         assertEquals(1, updates.size());
         assertEquals(updateId2, updates.get(0).getId());
@@ -52,7 +52,7 @@ public class UpdateListTest {
     @Test
     public void testIncrease() {
         UpdateList list = new UpdateList(1);
-        long updateId = list.prepend(new MemberJoinedUpdate(new MemberEndpoint("localhost", 5302), System.currentTimeMillis()));
+        long updateId = list.memberJoined(new MemberEndpoint("localhost", 5302), System.currentTimeMillis());
         List<AbstractUpdate> updates = list.take(1);
         assertEquals(1, updates.size());
         assertEquals(updateId, updates.get(0).getId());

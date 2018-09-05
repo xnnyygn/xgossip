@@ -2,9 +2,9 @@ package in.xnnyygn.xgossip.updates;
 
 public abstract class AbstractUpdate {
 
-    private long id;
+    private final long id;
 
-    public void setId(long id) {
+    public AbstractUpdate(long id) {
         this.id = id;
     }
 

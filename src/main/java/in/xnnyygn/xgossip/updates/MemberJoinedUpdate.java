@@ -9,16 +9,7 @@ public class MemberJoinedUpdate extends AbstractUpdate {
     private final long timeJoined;
 
     public MemberJoinedUpdate(long id, MemberEndpoint endpoint, long timeJoined) {
-        setId(id);
-        this.endpoint = endpoint;
-        this.timeJoined = timeJoined;
-    }
-
-    public MemberJoinedUpdate(Member member) {
-        this(member.getEndpoint(), member.getTimeAdded());
-    }
-
-    public MemberJoinedUpdate(MemberEndpoint endpoint, long timeJoined) {
+        super(id);
         this.endpoint = endpoint;
         this.timeJoined = timeJoined;
     }

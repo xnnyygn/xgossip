@@ -1,5 +1,6 @@
 package in.xnnyygn.xgossip.rpc;
 
+import com.google.common.collect.Iterables;
 import com.google.protobuf.ByteString;
 import in.xnnyygn.xgossip.Member;
 import in.xnnyygn.xgossip.MemberEndpoint;
@@ -7,6 +8,7 @@ import in.xnnyygn.xgossip.MemberNotification;
 import in.xnnyygn.xgossip.rpc.messages.*;
 import in.xnnyygn.xgossip.updates.AbstractUpdate;
 import in.xnnyygn.xgossip.updates.MemberJoinedUpdate;
+import in.xnnyygn.xgossip.updates.MemberLeavedUpdate;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -21,17 +23,18 @@ class PacketProtocol {
 
     private static final int MSG_TYPE_MEMBER_JOIN_RPC = 1;
     private static final int MSG_TYPE_MEMBER_JOIN_RESPONSE = 2;
-    private static final int MSG_TYPE_MEMBER_UPDATES_RPC = 3;
-    private static final int MSG_TYPE_MEMBER_UPDATES_AGREED_RESPONSE = 4;
-    private static final int MSG_TYPE_MEMBER_UPDATES_RESPONSE = 5;
-    private static final int MSG_TYPE_MEMBERS_MERGE_RESPONSE = 6;
-    private static final int MSG_TYPE_MEMBERS_MERGED_RESPONSE = 7;
-    private static final int MSG_TYPE_PING_RPC = 8;
-    private static final int MSG_TYPE_PING_RESPONSE = 9;
-    private static final int MSG_TYPE_PING_REQUEST_RPC = 10;
-    private static final int MSG_TYPE_PROXY_PING_RPC = 11;
-    private static final int MSG_TYPE_PROXY_PING_RESPONSE = 12;
-    private static final int MSG_TYPE_PROXY_PING_DONE_RESPONSE = 13;
+    private static final int MSG_TYPE_MEMBER_LEAVED_RPC = 3;
+    private static final int MSG_TYPE_MEMBER_UPDATES_RPC = 10;
+    private static final int MSG_TYPE_MEMBER_UPDATES_AGREED_RESPONSE = 11;
+    private static final int MSG_TYPE_MEMBER_UPDATES_RESPONSE = 12;
+    private static final int MSG_TYPE_MEMBERS_MERGE_RESPONSE = 13;
+    private static final int MSG_TYPE_MEMBERS_MERGED_RESPONSE = 14;
+    private static final int MSG_TYPE_PING_RPC = 20;
+    private static final int MSG_TYPE_PING_RESPONSE = 21;
+    private static final int MSG_TYPE_PING_REQUEST_RPC = 22;
+    private static final int MSG_TYPE_PROXY_PING_RPC = 23;
+    private static final int MSG_TYPE_PROXY_PING_RESPONSE = 24;
+    private static final int MSG_TYPE_PROXY_PING_DONE_RESPONSE = 25;
 
     DatagramPacket toPacket(MemberEndpoint sender, AbstractMessage message, MemberEndpoint recipient) {
         byte[] bytes;
@@ -100,6 +103,13 @@ class PacketProtocol {
             Protos.MemberJoinResponse.newBuilder()
                     .addAllMembers(toProtoMembers(memberJoinResponse.getMembers()))
                     .build().writeTo(dataOutput);
+        } else if (message instanceof MemberLeavedRpc) {
+            dataOutput.writeInt(MSG_TYPE_MEMBER_LEAVED_RPC);
+            MemberLeavedRpc memberLeavedRpc = (MemberLeavedRpc) message;
+            Protos.MemberLeavedRpc.newBuilder()
+                    .setEndpoint(toProtoMemberEndpoint(memberLeavedRpc.getEndpoint()))
+                    .setTimeLeaved(memberLeavedRpc.getTimeLeaved())
+                    .build().writeTo(dataOutput);
         } else if (message instanceof MemberUpdatesRpc) {
             dataOutput.writeInt(MSG_TYPE_MEMBER_UPDATES_RPC);
             MemberUpdatesRpc memberUpdatesRpc = (MemberUpdatesRpc) message;
@@ -107,6 +117,7 @@ class PacketProtocol {
             Protos.MemberUpdatesRpc.newBuilder()
                     .setExchangeAt(memberUpdatesRpc.getExchangeAt())
                     .addAllMemberJoinedUpdates(toProtoUpdates(updateMap, MemberJoinedUpdate.class))
+                    .addAllMemberLeavedUpdate(toProtoUpdates(updateMap, MemberLeavedUpdate.class))
                     .addAllNotifications(memberUpdatesRpc.getNotifications().stream().map(this::toProtoMemberNotification).collect(Collectors.toList()))
                     .setMemberDigest(ByteString.copyFrom(memberUpdatesRpc.getMembersDigest()))
                     .build().writeTo(dataOutput);
@@ -120,13 +131,12 @@ class PacketProtocol {
         } else if (message instanceof MemberUpdatesResponse) {
             dataOutput.writeInt(MSG_TYPE_MEMBER_UPDATES_RESPONSE);
             MemberUpdatesResponse memberUpdatesResponse = (MemberUpdatesResponse) message;
-            Map<Class<? extends AbstractUpdate>, Collection<AbstractUpdate>> updateMap = groupUpdates(
-                    memberUpdatesResponse.getUpdates()
-            );
+            Map<Class<? extends AbstractUpdate>, Collection<AbstractUpdate>> updateMap = groupUpdates(memberUpdatesResponse.getUpdates());
             Protos.MemberUpdatesResponse.newBuilder()
                     .setExchangeAt(memberUpdatesResponse.getExchangeAt())
                     .putAllUpdatedMap(memberUpdatesResponse.getUpdatedMap())
                     .addAllMemberJoinedUpdates(toProtoUpdates(updateMap, MemberJoinedUpdate.class))
+                    .addAllMemberLeavedUpdates(toProtoUpdates(updateMap, MemberLeavedUpdate.class))
                     .setMemberDigest(ByteString.copyFrom(memberUpdatesResponse.getMembersDigest()))
                     .setHopCount(memberUpdatesResponse.getHopCount())
                     .build().writeTo(dataOutput);
@@ -210,6 +220,14 @@ class PacketProtocol {
                     .setTimeJoined(memberJoinedUpdate.getTimeJoined())
                     .build();
         }
+        if (update instanceof MemberLeavedUpdate) {
+            MemberLeavedUpdate memberLeavedUpdate = (MemberLeavedUpdate) update;
+            return Protos.MemberLeavedUpdate.newBuilder()
+                    .setId(memberLeavedUpdate.getId())
+                    .setEndpoint(toProtoMemberEndpoint(memberLeavedUpdate.getEndpoint()))
+                    .setTimeLeaved(memberLeavedUpdate.getTimeLeaved())
+                    .build();
+        }
         throw new ProtocolException("unsupported update " + update.getClass());
     }
 
@@ -268,11 +286,17 @@ class PacketProtocol {
                 case MSG_TYPE_MEMBER_JOIN_RESPONSE:
                     Protos.MemberJoinResponse protoMemberJoinResponse = Protos.MemberJoinResponse.parseFrom(input);
                     return new MemberJoinResponse(toMembers(protoMemberJoinResponse.getMembersList()));
+                case MSG_TYPE_MEMBER_LEAVED_RPC:
+                    Protos.MemberLeavedRpc protoMemberLeavedRpc = Protos.MemberLeavedRpc.parseFrom(input);
+                    return new MemberLeavedRpc(toMemberEndpoint(protoMemberLeavedRpc.getEndpoint()), protoMemberLeavedRpc.getTimeLeaved());
                 case MSG_TYPE_MEMBER_UPDATES_RPC:
                     Protos.MemberUpdatesRpc protoMemberUpdatesRpc = Protos.MemberUpdatesRpc.parseFrom(input);
                     return new MemberUpdatesRpc(
                             protoMemberUpdatesRpc.getExchangeAt(),
-                            toUpdates(protoMemberUpdatesRpc.getMemberJoinedUpdatesList()),
+                            toUpdates(Iterables.concat(
+                                    protoMemberUpdatesRpc.getMemberJoinedUpdatesList(),
+                                    protoMemberUpdatesRpc.getMemberLeavedUpdateList()
+                            )),
                             protoMemberUpdatesRpc.getNotificationsList().stream().map(this::toMemberNotification).collect(Collectors.toList()),
                             protoMemberUpdatesRpc.getMemberDigest().toByteArray()
                     );
@@ -287,7 +311,10 @@ class PacketProtocol {
                     return new MemberUpdatesResponse(
                             protoMemberUpdatesResponse.getExchangeAt(),
                             protoMemberUpdatesResponse.getUpdatedMapMap(),
-                            toUpdates(protoMemberUpdatesResponse.getMemberJoinedUpdatesList()),
+                            toUpdates(Iterables.concat(
+                                    protoMemberUpdatesResponse.getMemberJoinedUpdatesList(),
+                                    protoMemberUpdatesResponse.getMemberLeavedUpdatesList()
+                            )),
                             protoMemberUpdatesResponse.getMemberDigest().toByteArray(),
                             protoMemberUpdatesResponse.getHopCount()
                     );
@@ -350,6 +377,14 @@ class PacketProtocol {
                         protoMemberJoinedUpdate.getId(),
                         toMemberEndpoint(protoMemberJoinedUpdate.getEndpoint()),
                         protoMemberJoinedUpdate.getTimeJoined()
+                );
+            }
+            if (rawUpdate instanceof Protos.MemberLeavedUpdate) {
+                Protos.MemberLeavedUpdate protoMemberLeavedUpdate = (Protos.MemberLeavedUpdate) rawUpdate;
+                return new MemberLeavedUpdate(
+                        protoMemberLeavedUpdate.getId(),
+                        toMemberEndpoint(protoMemberLeavedUpdate.getEndpoint()),
+                        protoMemberLeavedUpdate.getTimeLeaved()
                 );
             }
             throw new ParserException("unsupported update " + rawUpdate.getClass());

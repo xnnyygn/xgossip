@@ -8,11 +8,12 @@ class MemberListContext {
 
     private final UpdateList updateList = new UpdateList(5);
     private final NotificationList notificationList = new NotificationList(5);
-    private Scheduler scheduler;
     private MemberList memberList;
+    private Scheduler scheduler;
     private MessageDispatcher messageDispatcher;
-    private MemberEndpoint selfEndpoint;
     private Transporter transporter;
+    private MemberEndpoint selfEndpoint;
+    private long timeStarted;
 
     MemberList getMemberList() {
         return memberList;
@@ -58,8 +59,16 @@ class MemberListContext {
         this.messageDispatcher = messageDispatcher;
     }
 
-    public NotificationList getNotificationList() {
+    NotificationList getNotificationList() {
         return notificationList;
+    }
+
+    void setTimeStarted(long timeStarted) {
+        this.timeStarted = timeStarted;
+    }
+
+    long getTimeStarted() {
+        return timeStarted;
     }
 
 }

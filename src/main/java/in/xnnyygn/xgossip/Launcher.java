@@ -18,10 +18,21 @@ public class Launcher {
         for (int i = 1; i < args.length; i++) {
             seedEndpoints.add(parseEndpoint(args[i]));
         }
-
         memberManager.join(seedEndpoints);
+        Thread listThread = new Thread(() -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                System.out.println("AVAILABLE ENDPOINTS => " + memberManager.listAvailableEndpoints());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        });
+        listThread.start();
         System.in.read();
-        // TODO leave
+        listThread.interrupt();
+        memberManager.leave();
         memberManager.shutdown();
     }
 

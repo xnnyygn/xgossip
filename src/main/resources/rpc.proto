@@ -23,10 +23,21 @@ message MemberJoinResponse {
     repeated Member members = 1;
 }
 
+message MemberLeavedRpc {
+    MemberEndpoint endpoint = 1;
+    int64 time_leaved = 2;
+}
+
 message MemberJoinedUpdate {
     int64 id = 1;
     MemberEndpoint endpoint = 2;
     int64 time_joined = 3;
+}
+
+message MemberLeavedUpdate {
+    int64 id = 1;
+    MemberEndpoint endpoint = 2;
+    int64 time_leaved = 3;
 }
 
 message MemberNotification {
@@ -39,8 +50,9 @@ message MemberNotification {
 message MemberUpdatesRpc {
     int64 exchange_at = 1;
     repeated MemberJoinedUpdate member_joined_updates = 2;
-    repeated MemberNotification notifications = 3;
-    bytes member_digest = 4;
+    repeated MemberLeavedUpdate member_leaved_update = 3;
+    repeated MemberNotification notifications = 4;
+    bytes member_digest = 5;
 }
 
 message MemberUpdatesAgreedResponse {
@@ -52,8 +64,9 @@ message MemberUpdatesResponse {
     int64 exchange_at = 1;
     map<int64, bool> updated_map = 2;
     repeated MemberJoinedUpdate member_joined_updates = 3;
-    bytes member_digest = 4;
-    int32 hop_count = 5;
+    repeated MemberJoinedUpdate member_leaved_updates = 4;
+    bytes member_digest = 5;
+    int32 hop_count = 6;
 }
 
 message MembersMergeResponse {

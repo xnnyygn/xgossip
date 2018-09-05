@@ -1,6 +1,8 @@
 package in.xnnyygn.xgossip;
 
 import in.xnnyygn.xgossip.updates.AbstractUpdate;
+import in.xnnyygn.xgossip.updates.MemberJoinedUpdate;
+import in.xnnyygn.xgossip.updates.MemberLeavedUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,12 +29,31 @@ public class UpdateList {
         this.threshold = threshold;
     }
 
-    // TODO change to member joined
-    public long prepend(AbstractUpdate update) {
+    public long add(AbstractUpdate update) {
+        if (update instanceof MemberJoinedUpdate) {
+            MemberJoinedUpdate memberJoinedUpdate = (MemberJoinedUpdate) update;
+            return memberJoined(memberJoinedUpdate.getEndpoint(), memberJoinedUpdate.getTimeJoined());
+        }
+        if (update instanceof MemberLeavedUpdate) {
+            MemberLeavedUpdate memberLeavedUpdate = (MemberLeavedUpdate) update;
+            return memberLeaved(memberLeavedUpdate.getEndpoint(), memberLeavedUpdate.getTimeLeaved());
+        }
+        throw new IllegalArgumentException("unsupported update " + update.getClass());
+    }
+
+    public long memberJoined(MemberEndpoint endpoint, long timeJoined) {
         long updateId = entryId.incrementAndGet();
-        update.setId(updateId);
+        MemberJoinedUpdate update = new MemberJoinedUpdate(updateId, endpoint, timeJoined);
         entryMap.put(updateId, new UpdateEntry(update));
-        logger.debug("prepend update {}", updateId);
+        logger.debug("add member joined update, id {}", updateId);
+        return updateId;
+    }
+
+    public long memberLeaved(MemberEndpoint endpoint, long timeLeaved) {
+        long updateId = entryId.incrementAndGet();
+        MemberLeavedUpdate update = new MemberLeavedUpdate(updateId, endpoint, timeLeaved);
+        entryMap.put(updateId, new UpdateEntry(update));
+        logger.debug("add member leaved update, id {}", updateId);
         return updateId;
     }
 

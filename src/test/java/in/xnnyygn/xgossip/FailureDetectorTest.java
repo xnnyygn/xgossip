@@ -23,7 +23,7 @@ public class FailureDetectorTest {
         context.setTransporter(new MockTransporter());
         context.setScheduler(new MockScheduler());
         context.setSelfEndpoint(selfEndpoint);
-        context.setMemberList(new MemberList(new Member(selfEndpoint)));
+        context.setMemberList(new MemberList(selfEndpoint, System.currentTimeMillis()));
         context.setMessageDispatcher(new MessageDispatcher());
 
         detector = new FailureDetector(context);
@@ -33,7 +33,7 @@ public class FailureDetectorTest {
     @Test
     public void testPingPong() {
         MemberEndpoint endpoint = new MemberEndpoint("localhost", 5303);
-        context.getMemberList().add(new Member(endpoint));
+        context.getMemberList().add(endpoint, System.currentTimeMillis());
         detector.ping();
         MockTransporter mockTransporter = (MockTransporter) context.getTransporter();
         PingRpc pingRpc = (PingRpc) mockTransporter.getMessages().get(0).getPayload();
@@ -53,7 +53,7 @@ public class FailureDetectorTest {
     @Test
     public void testPingTimeout() {
         MemberEndpoint endpoint = new MemberEndpoint("localhost", 5303);
-        context.getMemberList().add(new Member(endpoint));
+        context.getMemberList().add(endpoint, System.currentTimeMillis());
         detector.ping();
         MockScheduler mockScheduler = (MockScheduler) context.getScheduler();
         mockScheduler.runLastCommand();
@@ -63,8 +63,8 @@ public class FailureDetectorTest {
     public void testProxyPing1() {
         MemberEndpoint endpoint1 = new MemberEndpoint("localhost", 5303);
         MemberEndpoint endpoint2 = new MemberEndpoint("localhost", 5304);
-        context.getMemberList().add(new Member(endpoint1));
-        context.getMemberList().add(new Member(endpoint2));
+        context.getMemberList().add(endpoint1, System.currentTimeMillis());
+        context.getMemberList().add(endpoint2, System.currentTimeMillis());
         detector.ping();
         MockScheduler mockScheduler = (MockScheduler) context.getScheduler();
         mockScheduler.runLastCommand();
@@ -77,8 +77,8 @@ public class FailureDetectorTest {
     public void testProxyPing2() {
         MemberEndpoint endpoint1 = new MemberEndpoint("localhost", 5303);
         MemberEndpoint endpoint2 = new MemberEndpoint("localhost", 5304);
-        context.getMemberList().add(new Member(endpoint1));
-        context.getMemberList().add(new Member(endpoint2));
+        context.getMemberList().add(endpoint1, System.currentTimeMillis());
+        context.getMemberList().add(endpoint2, System.currentTimeMillis());
         detector.ping();
         MockScheduler mockScheduler = (MockScheduler) context.getScheduler();
         mockScheduler.runLastCommand();

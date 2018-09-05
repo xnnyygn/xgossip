@@ -2815,6 +2815,677 @@ public final class Protos {
 
   }
 
+  public interface MemberLeavedRpcOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:MemberLeavedRpc)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>.MemberEndpoint endpoint = 1;</code>
+     */
+    boolean hasEndpoint();
+    /**
+     * <code>.MemberEndpoint endpoint = 1;</code>
+     */
+    in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint getEndpoint();
+    /**
+     * <code>.MemberEndpoint endpoint = 1;</code>
+     */
+    in.xnnyygn.xgossip.rpc.Protos.MemberEndpointOrBuilder getEndpointOrBuilder();
+
+    /**
+     * <code>int64 time_leaved = 2;</code>
+     */
+    long getTimeLeaved();
+  }
+  /**
+   * Protobuf type {@code MemberLeavedRpc}
+   */
+  public  static final class MemberLeavedRpc extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:MemberLeavedRpc)
+      MemberLeavedRpcOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use MemberLeavedRpc.newBuilder() to construct.
+    private MemberLeavedRpc(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private MemberLeavedRpc() {
+      timeLeaved_ = 0L;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private MemberLeavedRpc(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.Builder subBuilder = null;
+              if (endpoint_ != null) {
+                subBuilder = endpoint_.toBuilder();
+              }
+              endpoint_ = input.readMessage(in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(endpoint_);
+                endpoint_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 16: {
+
+              timeLeaved_ = input.readInt64();
+              break;
+            }
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return in.xnnyygn.xgossip.rpc.Protos.internal_static_MemberLeavedRpc_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return in.xnnyygn.xgossip.rpc.Protos.internal_static_MemberLeavedRpc_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc.class, in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc.Builder.class);
+    }
+
+    public static final int ENDPOINT_FIELD_NUMBER = 1;
+    private in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint endpoint_;
+    /**
+     * <code>.MemberEndpoint endpoint = 1;</code>
+     */
+    public boolean hasEndpoint() {
+      return endpoint_ != null;
+    }
+    /**
+     * <code>.MemberEndpoint endpoint = 1;</code>
+     */
+    public in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint getEndpoint() {
+      return endpoint_ == null ? in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.getDefaultInstance() : endpoint_;
+    }
+    /**
+     * <code>.MemberEndpoint endpoint = 1;</code>
+     */
+    public in.xnnyygn.xgossip.rpc.Protos.MemberEndpointOrBuilder getEndpointOrBuilder() {
+      return getEndpoint();
+    }
+
+    public static final int TIME_LEAVED_FIELD_NUMBER = 2;
+    private long timeLeaved_;
+    /**
+     * <code>int64 time_leaved = 2;</code>
+     */
+    public long getTimeLeaved() {
+      return timeLeaved_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (endpoint_ != null) {
+        output.writeMessage(1, getEndpoint());
+      }
+      if (timeLeaved_ != 0L) {
+        output.writeInt64(2, timeLeaved_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (endpoint_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getEndpoint());
+      }
+      if (timeLeaved_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(2, timeLeaved_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc)) {
+        return super.equals(obj);
+      }
+      in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc other = (in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc) obj;
+
+      boolean result = true;
+      result = result && (hasEndpoint() == other.hasEndpoint());
+      if (hasEndpoint()) {
+        result = result && getEndpoint()
+            .equals(other.getEndpoint());
+      }
+      result = result && (getTimeLeaved()
+          == other.getTimeLeaved());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasEndpoint()) {
+        hash = (37 * hash) + ENDPOINT_FIELD_NUMBER;
+        hash = (53 * hash) + getEndpoint().hashCode();
+      }
+      hash = (37 * hash) + TIME_LEAVED_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getTimeLeaved());
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code MemberLeavedRpc}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:MemberLeavedRpc)
+        in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpcOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return in.xnnyygn.xgossip.rpc.Protos.internal_static_MemberLeavedRpc_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return in.xnnyygn.xgossip.rpc.Protos.internal_static_MemberLeavedRpc_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc.class, in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc.Builder.class);
+      }
+
+      // Construct using in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (endpointBuilder_ == null) {
+          endpoint_ = null;
+        } else {
+          endpoint_ = null;
+          endpointBuilder_ = null;
+        }
+        timeLeaved_ = 0L;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return in.xnnyygn.xgossip.rpc.Protos.internal_static_MemberLeavedRpc_descriptor;
+      }
+
+      @java.lang.Override
+      public in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc getDefaultInstanceForType() {
+        return in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc build() {
+        in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc buildPartial() {
+        in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc result = new in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc(this);
+        if (endpointBuilder_ == null) {
+          result.endpoint_ = endpoint_;
+        } else {
+          result.endpoint_ = endpointBuilder_.build();
+        }
+        result.timeLeaved_ = timeLeaved_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc) {
+          return mergeFrom((in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc other) {
+        if (other == in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc.getDefaultInstance()) return this;
+        if (other.hasEndpoint()) {
+          mergeEndpoint(other.getEndpoint());
+        }
+        if (other.getTimeLeaved() != 0L) {
+          setTimeLeaved(other.getTimeLeaved());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint endpoint_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint, in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.Builder, in.xnnyygn.xgossip.rpc.Protos.MemberEndpointOrBuilder> endpointBuilder_;
+      /**
+       * <code>.MemberEndpoint endpoint = 1;</code>
+       */
+      public boolean hasEndpoint() {
+        return endpointBuilder_ != null || endpoint_ != null;
+      }
+      /**
+       * <code>.MemberEndpoint endpoint = 1;</code>
+       */
+      public in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint getEndpoint() {
+        if (endpointBuilder_ == null) {
+          return endpoint_ == null ? in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.getDefaultInstance() : endpoint_;
+        } else {
+          return endpointBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.MemberEndpoint endpoint = 1;</code>
+       */
+      public Builder setEndpoint(in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint value) {
+        if (endpointBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          endpoint_ = value;
+          onChanged();
+        } else {
+          endpointBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.MemberEndpoint endpoint = 1;</code>
+       */
+      public Builder setEndpoint(
+          in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.Builder builderForValue) {
+        if (endpointBuilder_ == null) {
+          endpoint_ = builderForValue.build();
+          onChanged();
+        } else {
+          endpointBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.MemberEndpoint endpoint = 1;</code>
+       */
+      public Builder mergeEndpoint(in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint value) {
+        if (endpointBuilder_ == null) {
+          if (endpoint_ != null) {
+            endpoint_ =
+              in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.newBuilder(endpoint_).mergeFrom(value).buildPartial();
+          } else {
+            endpoint_ = value;
+          }
+          onChanged();
+        } else {
+          endpointBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.MemberEndpoint endpoint = 1;</code>
+       */
+      public Builder clearEndpoint() {
+        if (endpointBuilder_ == null) {
+          endpoint_ = null;
+          onChanged();
+        } else {
+          endpoint_ = null;
+          endpointBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.MemberEndpoint endpoint = 1;</code>
+       */
+      public in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.Builder getEndpointBuilder() {
+        
+        onChanged();
+        return getEndpointFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.MemberEndpoint endpoint = 1;</code>
+       */
+      public in.xnnyygn.xgossip.rpc.Protos.MemberEndpointOrBuilder getEndpointOrBuilder() {
+        if (endpointBuilder_ != null) {
+          return endpointBuilder_.getMessageOrBuilder();
+        } else {
+          return endpoint_ == null ?
+              in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.getDefaultInstance() : endpoint_;
+        }
+      }
+      /**
+       * <code>.MemberEndpoint endpoint = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint, in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.Builder, in.xnnyygn.xgossip.rpc.Protos.MemberEndpointOrBuilder> 
+          getEndpointFieldBuilder() {
+        if (endpointBuilder_ == null) {
+          endpointBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint, in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.Builder, in.xnnyygn.xgossip.rpc.Protos.MemberEndpointOrBuilder>(
+                  getEndpoint(),
+                  getParentForChildren(),
+                  isClean());
+          endpoint_ = null;
+        }
+        return endpointBuilder_;
+      }
+
+      private long timeLeaved_ ;
+      /**
+       * <code>int64 time_leaved = 2;</code>
+       */
+      public long getTimeLeaved() {
+        return timeLeaved_;
+      }
+      /**
+       * <code>int64 time_leaved = 2;</code>
+       */
+      public Builder setTimeLeaved(long value) {
+        
+        timeLeaved_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 time_leaved = 2;</code>
+       */
+      public Builder clearTimeLeaved() {
+        
+        timeLeaved_ = 0L;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:MemberLeavedRpc)
+    }
+
+    // @@protoc_insertion_point(class_scope:MemberLeavedRpc)
+    private static final in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc();
+    }
+
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<MemberLeavedRpc>
+        PARSER = new com.google.protobuf.AbstractParser<MemberLeavedRpc>() {
+      @java.lang.Override
+      public MemberLeavedRpc parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new MemberLeavedRpc(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<MemberLeavedRpc> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<MemberLeavedRpc> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public in.xnnyygn.xgossip.rpc.Protos.MemberLeavedRpc getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface MemberJoinedUpdateOrBuilder extends
       // @@protoc_insertion_point(interface_extends:MemberJoinedUpdate)
       com.google.protobuf.MessageOrBuilder {
@@ -3545,6 +4216,741 @@ public final class Protos {
 
     @java.lang.Override
     public in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface MemberLeavedUpdateOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:MemberLeavedUpdate)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int64 id = 1;</code>
+     */
+    long getId();
+
+    /**
+     * <code>.MemberEndpoint endpoint = 2;</code>
+     */
+    boolean hasEndpoint();
+    /**
+     * <code>.MemberEndpoint endpoint = 2;</code>
+     */
+    in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint getEndpoint();
+    /**
+     * <code>.MemberEndpoint endpoint = 2;</code>
+     */
+    in.xnnyygn.xgossip.rpc.Protos.MemberEndpointOrBuilder getEndpointOrBuilder();
+
+    /**
+     * <code>int64 time_leaved = 3;</code>
+     */
+    long getTimeLeaved();
+  }
+  /**
+   * Protobuf type {@code MemberLeavedUpdate}
+   */
+  public  static final class MemberLeavedUpdate extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:MemberLeavedUpdate)
+      MemberLeavedUpdateOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use MemberLeavedUpdate.newBuilder() to construct.
+    private MemberLeavedUpdate(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private MemberLeavedUpdate() {
+      id_ = 0L;
+      timeLeaved_ = 0L;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private MemberLeavedUpdate(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+
+              id_ = input.readInt64();
+              break;
+            }
+            case 18: {
+              in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.Builder subBuilder = null;
+              if (endpoint_ != null) {
+                subBuilder = endpoint_.toBuilder();
+              }
+              endpoint_ = input.readMessage(in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(endpoint_);
+                endpoint_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 24: {
+
+              timeLeaved_ = input.readInt64();
+              break;
+            }
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return in.xnnyygn.xgossip.rpc.Protos.internal_static_MemberLeavedUpdate_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return in.xnnyygn.xgossip.rpc.Protos.internal_static_MemberLeavedUpdate_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.class, in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.Builder.class);
+    }
+
+    public static final int ID_FIELD_NUMBER = 1;
+    private long id_;
+    /**
+     * <code>int64 id = 1;</code>
+     */
+    public long getId() {
+      return id_;
+    }
+
+    public static final int ENDPOINT_FIELD_NUMBER = 2;
+    private in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint endpoint_;
+    /**
+     * <code>.MemberEndpoint endpoint = 2;</code>
+     */
+    public boolean hasEndpoint() {
+      return endpoint_ != null;
+    }
+    /**
+     * <code>.MemberEndpoint endpoint = 2;</code>
+     */
+    public in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint getEndpoint() {
+      return endpoint_ == null ? in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.getDefaultInstance() : endpoint_;
+    }
+    /**
+     * <code>.MemberEndpoint endpoint = 2;</code>
+     */
+    public in.xnnyygn.xgossip.rpc.Protos.MemberEndpointOrBuilder getEndpointOrBuilder() {
+      return getEndpoint();
+    }
+
+    public static final int TIME_LEAVED_FIELD_NUMBER = 3;
+    private long timeLeaved_;
+    /**
+     * <code>int64 time_leaved = 3;</code>
+     */
+    public long getTimeLeaved() {
+      return timeLeaved_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (id_ != 0L) {
+        output.writeInt64(1, id_);
+      }
+      if (endpoint_ != null) {
+        output.writeMessage(2, getEndpoint());
+      }
+      if (timeLeaved_ != 0L) {
+        output.writeInt64(3, timeLeaved_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (id_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(1, id_);
+      }
+      if (endpoint_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getEndpoint());
+      }
+      if (timeLeaved_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(3, timeLeaved_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate)) {
+        return super.equals(obj);
+      }
+      in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate other = (in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate) obj;
+
+      boolean result = true;
+      result = result && (getId()
+          == other.getId());
+      result = result && (hasEndpoint() == other.hasEndpoint());
+      if (hasEndpoint()) {
+        result = result && getEndpoint()
+            .equals(other.getEndpoint());
+      }
+      result = result && (getTimeLeaved()
+          == other.getTimeLeaved());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ID_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getId());
+      if (hasEndpoint()) {
+        hash = (37 * hash) + ENDPOINT_FIELD_NUMBER;
+        hash = (53 * hash) + getEndpoint().hashCode();
+      }
+      hash = (37 * hash) + TIME_LEAVED_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getTimeLeaved());
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code MemberLeavedUpdate}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:MemberLeavedUpdate)
+        in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdateOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return in.xnnyygn.xgossip.rpc.Protos.internal_static_MemberLeavedUpdate_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return in.xnnyygn.xgossip.rpc.Protos.internal_static_MemberLeavedUpdate_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.class, in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.Builder.class);
+      }
+
+      // Construct using in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        id_ = 0L;
+
+        if (endpointBuilder_ == null) {
+          endpoint_ = null;
+        } else {
+          endpoint_ = null;
+          endpointBuilder_ = null;
+        }
+        timeLeaved_ = 0L;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return in.xnnyygn.xgossip.rpc.Protos.internal_static_MemberLeavedUpdate_descriptor;
+      }
+
+      @java.lang.Override
+      public in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate getDefaultInstanceForType() {
+        return in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate build() {
+        in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate buildPartial() {
+        in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate result = new in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate(this);
+        result.id_ = id_;
+        if (endpointBuilder_ == null) {
+          result.endpoint_ = endpoint_;
+        } else {
+          result.endpoint_ = endpointBuilder_.build();
+        }
+        result.timeLeaved_ = timeLeaved_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate) {
+          return mergeFrom((in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate other) {
+        if (other == in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.getDefaultInstance()) return this;
+        if (other.getId() != 0L) {
+          setId(other.getId());
+        }
+        if (other.hasEndpoint()) {
+          mergeEndpoint(other.getEndpoint());
+        }
+        if (other.getTimeLeaved() != 0L) {
+          setTimeLeaved(other.getTimeLeaved());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private long id_ ;
+      /**
+       * <code>int64 id = 1;</code>
+       */
+      public long getId() {
+        return id_;
+      }
+      /**
+       * <code>int64 id = 1;</code>
+       */
+      public Builder setId(long value) {
+        
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 id = 1;</code>
+       */
+      public Builder clearId() {
+        
+        id_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint endpoint_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint, in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.Builder, in.xnnyygn.xgossip.rpc.Protos.MemberEndpointOrBuilder> endpointBuilder_;
+      /**
+       * <code>.MemberEndpoint endpoint = 2;</code>
+       */
+      public boolean hasEndpoint() {
+        return endpointBuilder_ != null || endpoint_ != null;
+      }
+      /**
+       * <code>.MemberEndpoint endpoint = 2;</code>
+       */
+      public in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint getEndpoint() {
+        if (endpointBuilder_ == null) {
+          return endpoint_ == null ? in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.getDefaultInstance() : endpoint_;
+        } else {
+          return endpointBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.MemberEndpoint endpoint = 2;</code>
+       */
+      public Builder setEndpoint(in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint value) {
+        if (endpointBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          endpoint_ = value;
+          onChanged();
+        } else {
+          endpointBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.MemberEndpoint endpoint = 2;</code>
+       */
+      public Builder setEndpoint(
+          in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.Builder builderForValue) {
+        if (endpointBuilder_ == null) {
+          endpoint_ = builderForValue.build();
+          onChanged();
+        } else {
+          endpointBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.MemberEndpoint endpoint = 2;</code>
+       */
+      public Builder mergeEndpoint(in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint value) {
+        if (endpointBuilder_ == null) {
+          if (endpoint_ != null) {
+            endpoint_ =
+              in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.newBuilder(endpoint_).mergeFrom(value).buildPartial();
+          } else {
+            endpoint_ = value;
+          }
+          onChanged();
+        } else {
+          endpointBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.MemberEndpoint endpoint = 2;</code>
+       */
+      public Builder clearEndpoint() {
+        if (endpointBuilder_ == null) {
+          endpoint_ = null;
+          onChanged();
+        } else {
+          endpoint_ = null;
+          endpointBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.MemberEndpoint endpoint = 2;</code>
+       */
+      public in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.Builder getEndpointBuilder() {
+        
+        onChanged();
+        return getEndpointFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.MemberEndpoint endpoint = 2;</code>
+       */
+      public in.xnnyygn.xgossip.rpc.Protos.MemberEndpointOrBuilder getEndpointOrBuilder() {
+        if (endpointBuilder_ != null) {
+          return endpointBuilder_.getMessageOrBuilder();
+        } else {
+          return endpoint_ == null ?
+              in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.getDefaultInstance() : endpoint_;
+        }
+      }
+      /**
+       * <code>.MemberEndpoint endpoint = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint, in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.Builder, in.xnnyygn.xgossip.rpc.Protos.MemberEndpointOrBuilder> 
+          getEndpointFieldBuilder() {
+        if (endpointBuilder_ == null) {
+          endpointBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint, in.xnnyygn.xgossip.rpc.Protos.MemberEndpoint.Builder, in.xnnyygn.xgossip.rpc.Protos.MemberEndpointOrBuilder>(
+                  getEndpoint(),
+                  getParentForChildren(),
+                  isClean());
+          endpoint_ = null;
+        }
+        return endpointBuilder_;
+      }
+
+      private long timeLeaved_ ;
+      /**
+       * <code>int64 time_leaved = 3;</code>
+       */
+      public long getTimeLeaved() {
+        return timeLeaved_;
+      }
+      /**
+       * <code>int64 time_leaved = 3;</code>
+       */
+      public Builder setTimeLeaved(long value) {
+        
+        timeLeaved_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 time_leaved = 3;</code>
+       */
+      public Builder clearTimeLeaved() {
+        
+        timeLeaved_ = 0L;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:MemberLeavedUpdate)
+    }
+
+    // @@protoc_insertion_point(class_scope:MemberLeavedUpdate)
+    private static final in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate();
+    }
+
+    public static in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<MemberLeavedUpdate>
+        PARSER = new com.google.protobuf.AbstractParser<MemberLeavedUpdate>() {
+      @java.lang.Override
+      public MemberLeavedUpdate parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new MemberLeavedUpdate(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<MemberLeavedUpdate> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<MemberLeavedUpdate> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -4513,31 +5919,55 @@ public final class Protos {
         int index);
 
     /**
-     * <code>repeated .MemberNotification notifications = 3;</code>
+     * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+     */
+    java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate> 
+        getMemberLeavedUpdateList();
+    /**
+     * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+     */
+    in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate getMemberLeavedUpdate(int index);
+    /**
+     * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+     */
+    int getMemberLeavedUpdateCount();
+    /**
+     * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+     */
+    java.util.List<? extends in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdateOrBuilder> 
+        getMemberLeavedUpdateOrBuilderList();
+    /**
+     * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+     */
+    in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdateOrBuilder getMemberLeavedUpdateOrBuilder(
+        int index);
+
+    /**
+     * <code>repeated .MemberNotification notifications = 4;</code>
      */
     java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberNotification> 
         getNotificationsList();
     /**
-     * <code>repeated .MemberNotification notifications = 3;</code>
+     * <code>repeated .MemberNotification notifications = 4;</code>
      */
     in.xnnyygn.xgossip.rpc.Protos.MemberNotification getNotifications(int index);
     /**
-     * <code>repeated .MemberNotification notifications = 3;</code>
+     * <code>repeated .MemberNotification notifications = 4;</code>
      */
     int getNotificationsCount();
     /**
-     * <code>repeated .MemberNotification notifications = 3;</code>
+     * <code>repeated .MemberNotification notifications = 4;</code>
      */
     java.util.List<? extends in.xnnyygn.xgossip.rpc.Protos.MemberNotificationOrBuilder> 
         getNotificationsOrBuilderList();
     /**
-     * <code>repeated .MemberNotification notifications = 3;</code>
+     * <code>repeated .MemberNotification notifications = 4;</code>
      */
     in.xnnyygn.xgossip.rpc.Protos.MemberNotificationOrBuilder getNotificationsOrBuilder(
         int index);
 
     /**
-     * <code>bytes member_digest = 4;</code>
+     * <code>bytes member_digest = 5;</code>
      */
     com.google.protobuf.ByteString getMemberDigest();
   }
@@ -4556,6 +5986,7 @@ public final class Protos {
     private MemberUpdatesRpc() {
       exchangeAt_ = 0L;
       memberJoinedUpdates_ = java.util.Collections.emptyList();
+      memberLeavedUpdate_ = java.util.Collections.emptyList();
       notifications_ = java.util.Collections.emptyList();
       memberDigest_ = com.google.protobuf.ByteString.EMPTY;
     }
@@ -4600,14 +6031,23 @@ public final class Protos {
             }
             case 26: {
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                notifications_ = new java.util.ArrayList<in.xnnyygn.xgossip.rpc.Protos.MemberNotification>();
+                memberLeavedUpdate_ = new java.util.ArrayList<in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate>();
                 mutable_bitField0_ |= 0x00000004;
+              }
+              memberLeavedUpdate_.add(
+                  input.readMessage(in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.parser(), extensionRegistry));
+              break;
+            }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                notifications_ = new java.util.ArrayList<in.xnnyygn.xgossip.rpc.Protos.MemberNotification>();
+                mutable_bitField0_ |= 0x00000008;
               }
               notifications_.add(
                   input.readMessage(in.xnnyygn.xgossip.rpc.Protos.MemberNotification.parser(), extensionRegistry));
               break;
             }
-            case 34: {
+            case 42: {
 
               memberDigest_ = input.readBytes();
               break;
@@ -4631,6 +6071,9 @@ public final class Protos {
           memberJoinedUpdates_ = java.util.Collections.unmodifiableList(memberJoinedUpdates_);
         }
         if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          memberLeavedUpdate_ = java.util.Collections.unmodifiableList(memberLeavedUpdate_);
+        }
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
           notifications_ = java.util.Collections.unmodifiableList(notifications_);
         }
         this.unknownFields = unknownFields.build();
@@ -4695,45 +6138,80 @@ public final class Protos {
       return memberJoinedUpdates_.get(index);
     }
 
-    public static final int NOTIFICATIONS_FIELD_NUMBER = 3;
+    public static final int MEMBER_LEAVED_UPDATE_FIELD_NUMBER = 3;
+    private java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate> memberLeavedUpdate_;
+    /**
+     * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+     */
+    public java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate> getMemberLeavedUpdateList() {
+      return memberLeavedUpdate_;
+    }
+    /**
+     * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+     */
+    public java.util.List<? extends in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdateOrBuilder> 
+        getMemberLeavedUpdateOrBuilderList() {
+      return memberLeavedUpdate_;
+    }
+    /**
+     * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+     */
+    public int getMemberLeavedUpdateCount() {
+      return memberLeavedUpdate_.size();
+    }
+    /**
+     * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+     */
+    public in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate getMemberLeavedUpdate(int index) {
+      return memberLeavedUpdate_.get(index);
+    }
+    /**
+     * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+     */
+    public in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdateOrBuilder getMemberLeavedUpdateOrBuilder(
+        int index) {
+      return memberLeavedUpdate_.get(index);
+    }
+
+    public static final int NOTIFICATIONS_FIELD_NUMBER = 4;
     private java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberNotification> notifications_;
     /**
-     * <code>repeated .MemberNotification notifications = 3;</code>
+     * <code>repeated .MemberNotification notifications = 4;</code>
      */
     public java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberNotification> getNotificationsList() {
       return notifications_;
     }
     /**
-     * <code>repeated .MemberNotification notifications = 3;</code>
+     * <code>repeated .MemberNotification notifications = 4;</code>
      */
     public java.util.List<? extends in.xnnyygn.xgossip.rpc.Protos.MemberNotificationOrBuilder> 
         getNotificationsOrBuilderList() {
       return notifications_;
     }
     /**
-     * <code>repeated .MemberNotification notifications = 3;</code>
+     * <code>repeated .MemberNotification notifications = 4;</code>
      */
     public int getNotificationsCount() {
       return notifications_.size();
     }
     /**
-     * <code>repeated .MemberNotification notifications = 3;</code>
+     * <code>repeated .MemberNotification notifications = 4;</code>
      */
     public in.xnnyygn.xgossip.rpc.Protos.MemberNotification getNotifications(int index) {
       return notifications_.get(index);
     }
     /**
-     * <code>repeated .MemberNotification notifications = 3;</code>
+     * <code>repeated .MemberNotification notifications = 4;</code>
      */
     public in.xnnyygn.xgossip.rpc.Protos.MemberNotificationOrBuilder getNotificationsOrBuilder(
         int index) {
       return notifications_.get(index);
     }
 
-    public static final int MEMBER_DIGEST_FIELD_NUMBER = 4;
+    public static final int MEMBER_DIGEST_FIELD_NUMBER = 5;
     private com.google.protobuf.ByteString memberDigest_;
     /**
-     * <code>bytes member_digest = 4;</code>
+     * <code>bytes member_digest = 5;</code>
      */
     public com.google.protobuf.ByteString getMemberDigest() {
       return memberDigest_;
@@ -4759,11 +6237,14 @@ public final class Protos {
       for (int i = 0; i < memberJoinedUpdates_.size(); i++) {
         output.writeMessage(2, memberJoinedUpdates_.get(i));
       }
+      for (int i = 0; i < memberLeavedUpdate_.size(); i++) {
+        output.writeMessage(3, memberLeavedUpdate_.get(i));
+      }
       for (int i = 0; i < notifications_.size(); i++) {
-        output.writeMessage(3, notifications_.get(i));
+        output.writeMessage(4, notifications_.get(i));
       }
       if (!memberDigest_.isEmpty()) {
-        output.writeBytes(4, memberDigest_);
+        output.writeBytes(5, memberDigest_);
       }
       unknownFields.writeTo(output);
     }
@@ -4782,13 +6263,17 @@ public final class Protos {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, memberJoinedUpdates_.get(i));
       }
+      for (int i = 0; i < memberLeavedUpdate_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, memberLeavedUpdate_.get(i));
+      }
       for (int i = 0; i < notifications_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, notifications_.get(i));
+          .computeMessageSize(4, notifications_.get(i));
       }
       if (!memberDigest_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, memberDigest_);
+          .computeBytesSize(5, memberDigest_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -4810,6 +6295,8 @@ public final class Protos {
           == other.getExchangeAt());
       result = result && getMemberJoinedUpdatesList()
           .equals(other.getMemberJoinedUpdatesList());
+      result = result && getMemberLeavedUpdateList()
+          .equals(other.getMemberLeavedUpdateList());
       result = result && getNotificationsList()
           .equals(other.getNotificationsList());
       result = result && getMemberDigest()
@@ -4831,6 +6318,10 @@ public final class Protos {
       if (getMemberJoinedUpdatesCount() > 0) {
         hash = (37 * hash) + MEMBER_JOINED_UPDATES_FIELD_NUMBER;
         hash = (53 * hash) + getMemberJoinedUpdatesList().hashCode();
+      }
+      if (getMemberLeavedUpdateCount() > 0) {
+        hash = (37 * hash) + MEMBER_LEAVED_UPDATE_FIELD_NUMBER;
+        hash = (53 * hash) + getMemberLeavedUpdateList().hashCode();
       }
       if (getNotificationsCount() > 0) {
         hash = (37 * hash) + NOTIFICATIONS_FIELD_NUMBER;
@@ -4967,6 +6458,7 @@ public final class Protos {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
           getMemberJoinedUpdatesFieldBuilder();
+          getMemberLeavedUpdateFieldBuilder();
           getNotificationsFieldBuilder();
         }
       }
@@ -4981,9 +6473,15 @@ public final class Protos {
         } else {
           memberJoinedUpdatesBuilder_.clear();
         }
+        if (memberLeavedUpdateBuilder_ == null) {
+          memberLeavedUpdate_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        } else {
+          memberLeavedUpdateBuilder_.clear();
+        }
         if (notificationsBuilder_ == null) {
           notifications_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000008);
         } else {
           notificationsBuilder_.clear();
         }
@@ -5027,10 +6525,19 @@ public final class Protos {
         } else {
           result.memberJoinedUpdates_ = memberJoinedUpdatesBuilder_.build();
         }
-        if (notificationsBuilder_ == null) {
+        if (memberLeavedUpdateBuilder_ == null) {
           if (((bitField0_ & 0x00000004) == 0x00000004)) {
-            notifications_ = java.util.Collections.unmodifiableList(notifications_);
+            memberLeavedUpdate_ = java.util.Collections.unmodifiableList(memberLeavedUpdate_);
             bitField0_ = (bitField0_ & ~0x00000004);
+          }
+          result.memberLeavedUpdate_ = memberLeavedUpdate_;
+        } else {
+          result.memberLeavedUpdate_ = memberLeavedUpdateBuilder_.build();
+        }
+        if (notificationsBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
+            notifications_ = java.util.Collections.unmodifiableList(notifications_);
+            bitField0_ = (bitField0_ & ~0x00000008);
           }
           result.notifications_ = notifications_;
         } else {
@@ -5115,11 +6622,37 @@ public final class Protos {
             }
           }
         }
+        if (memberLeavedUpdateBuilder_ == null) {
+          if (!other.memberLeavedUpdate_.isEmpty()) {
+            if (memberLeavedUpdate_.isEmpty()) {
+              memberLeavedUpdate_ = other.memberLeavedUpdate_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+            } else {
+              ensureMemberLeavedUpdateIsMutable();
+              memberLeavedUpdate_.addAll(other.memberLeavedUpdate_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.memberLeavedUpdate_.isEmpty()) {
+            if (memberLeavedUpdateBuilder_.isEmpty()) {
+              memberLeavedUpdateBuilder_.dispose();
+              memberLeavedUpdateBuilder_ = null;
+              memberLeavedUpdate_ = other.memberLeavedUpdate_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+              memberLeavedUpdateBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getMemberLeavedUpdateFieldBuilder() : null;
+            } else {
+              memberLeavedUpdateBuilder_.addAllMessages(other.memberLeavedUpdate_);
+            }
+          }
+        }
         if (notificationsBuilder_ == null) {
           if (!other.notifications_.isEmpty()) {
             if (notifications_.isEmpty()) {
               notifications_ = other.notifications_;
-              bitField0_ = (bitField0_ & ~0x00000004);
+              bitField0_ = (bitField0_ & ~0x00000008);
             } else {
               ensureNotificationsIsMutable();
               notifications_.addAll(other.notifications_);
@@ -5132,7 +6665,7 @@ public final class Protos {
               notificationsBuilder_.dispose();
               notificationsBuilder_ = null;
               notifications_ = other.notifications_;
-              bitField0_ = (bitField0_ & ~0x00000004);
+              bitField0_ = (bitField0_ & ~0x00000008);
               notificationsBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getNotificationsFieldBuilder() : null;
@@ -5440,12 +6973,252 @@ public final class Protos {
         return memberJoinedUpdatesBuilder_;
       }
 
+      private java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate> memberLeavedUpdate_ =
+        java.util.Collections.emptyList();
+      private void ensureMemberLeavedUpdateIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          memberLeavedUpdate_ = new java.util.ArrayList<in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate>(memberLeavedUpdate_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate, in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.Builder, in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdateOrBuilder> memberLeavedUpdateBuilder_;
+
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate> getMemberLeavedUpdateList() {
+        if (memberLeavedUpdateBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(memberLeavedUpdate_);
+        } else {
+          return memberLeavedUpdateBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public int getMemberLeavedUpdateCount() {
+        if (memberLeavedUpdateBuilder_ == null) {
+          return memberLeavedUpdate_.size();
+        } else {
+          return memberLeavedUpdateBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate getMemberLeavedUpdate(int index) {
+        if (memberLeavedUpdateBuilder_ == null) {
+          return memberLeavedUpdate_.get(index);
+        } else {
+          return memberLeavedUpdateBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public Builder setMemberLeavedUpdate(
+          int index, in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate value) {
+        if (memberLeavedUpdateBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMemberLeavedUpdateIsMutable();
+          memberLeavedUpdate_.set(index, value);
+          onChanged();
+        } else {
+          memberLeavedUpdateBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public Builder setMemberLeavedUpdate(
+          int index, in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.Builder builderForValue) {
+        if (memberLeavedUpdateBuilder_ == null) {
+          ensureMemberLeavedUpdateIsMutable();
+          memberLeavedUpdate_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          memberLeavedUpdateBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public Builder addMemberLeavedUpdate(in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate value) {
+        if (memberLeavedUpdateBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMemberLeavedUpdateIsMutable();
+          memberLeavedUpdate_.add(value);
+          onChanged();
+        } else {
+          memberLeavedUpdateBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public Builder addMemberLeavedUpdate(
+          int index, in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate value) {
+        if (memberLeavedUpdateBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMemberLeavedUpdateIsMutable();
+          memberLeavedUpdate_.add(index, value);
+          onChanged();
+        } else {
+          memberLeavedUpdateBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public Builder addMemberLeavedUpdate(
+          in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.Builder builderForValue) {
+        if (memberLeavedUpdateBuilder_ == null) {
+          ensureMemberLeavedUpdateIsMutable();
+          memberLeavedUpdate_.add(builderForValue.build());
+          onChanged();
+        } else {
+          memberLeavedUpdateBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public Builder addMemberLeavedUpdate(
+          int index, in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.Builder builderForValue) {
+        if (memberLeavedUpdateBuilder_ == null) {
+          ensureMemberLeavedUpdateIsMutable();
+          memberLeavedUpdate_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          memberLeavedUpdateBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public Builder addAllMemberLeavedUpdate(
+          java.lang.Iterable<? extends in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate> values) {
+        if (memberLeavedUpdateBuilder_ == null) {
+          ensureMemberLeavedUpdateIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, memberLeavedUpdate_);
+          onChanged();
+        } else {
+          memberLeavedUpdateBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public Builder clearMemberLeavedUpdate() {
+        if (memberLeavedUpdateBuilder_ == null) {
+          memberLeavedUpdate_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          onChanged();
+        } else {
+          memberLeavedUpdateBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public Builder removeMemberLeavedUpdate(int index) {
+        if (memberLeavedUpdateBuilder_ == null) {
+          ensureMemberLeavedUpdateIsMutable();
+          memberLeavedUpdate_.remove(index);
+          onChanged();
+        } else {
+          memberLeavedUpdateBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.Builder getMemberLeavedUpdateBuilder(
+          int index) {
+        return getMemberLeavedUpdateFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdateOrBuilder getMemberLeavedUpdateOrBuilder(
+          int index) {
+        if (memberLeavedUpdateBuilder_ == null) {
+          return memberLeavedUpdate_.get(index);  } else {
+          return memberLeavedUpdateBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public java.util.List<? extends in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdateOrBuilder> 
+           getMemberLeavedUpdateOrBuilderList() {
+        if (memberLeavedUpdateBuilder_ != null) {
+          return memberLeavedUpdateBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(memberLeavedUpdate_);
+        }
+      }
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.Builder addMemberLeavedUpdateBuilder() {
+        return getMemberLeavedUpdateFieldBuilder().addBuilder(
+            in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.Builder addMemberLeavedUpdateBuilder(
+          int index) {
+        return getMemberLeavedUpdateFieldBuilder().addBuilder(
+            index, in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .MemberLeavedUpdate member_leaved_update = 3;</code>
+       */
+      public java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.Builder> 
+           getMemberLeavedUpdateBuilderList() {
+        return getMemberLeavedUpdateFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate, in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.Builder, in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdateOrBuilder> 
+          getMemberLeavedUpdateFieldBuilder() {
+        if (memberLeavedUpdateBuilder_ == null) {
+          memberLeavedUpdateBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate, in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdate.Builder, in.xnnyygn.xgossip.rpc.Protos.MemberLeavedUpdateOrBuilder>(
+                  memberLeavedUpdate_,
+                  ((bitField0_ & 0x00000004) == 0x00000004),
+                  getParentForChildren(),
+                  isClean());
+          memberLeavedUpdate_ = null;
+        }
+        return memberLeavedUpdateBuilder_;
+      }
+
       private java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberNotification> notifications_ =
         java.util.Collections.emptyList();
       private void ensureNotificationsIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
           notifications_ = new java.util.ArrayList<in.xnnyygn.xgossip.rpc.Protos.MemberNotification>(notifications_);
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000008;
          }
       }
 
@@ -5453,7 +7226,7 @@ public final class Protos {
           in.xnnyygn.xgossip.rpc.Protos.MemberNotification, in.xnnyygn.xgossip.rpc.Protos.MemberNotification.Builder, in.xnnyygn.xgossip.rpc.Protos.MemberNotificationOrBuilder> notificationsBuilder_;
 
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberNotification> getNotificationsList() {
         if (notificationsBuilder_ == null) {
@@ -5463,7 +7236,7 @@ public final class Protos {
         }
       }
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public int getNotificationsCount() {
         if (notificationsBuilder_ == null) {
@@ -5473,7 +7246,7 @@ public final class Protos {
         }
       }
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public in.xnnyygn.xgossip.rpc.Protos.MemberNotification getNotifications(int index) {
         if (notificationsBuilder_ == null) {
@@ -5483,7 +7256,7 @@ public final class Protos {
         }
       }
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public Builder setNotifications(
           int index, in.xnnyygn.xgossip.rpc.Protos.MemberNotification value) {
@@ -5500,7 +7273,7 @@ public final class Protos {
         return this;
       }
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public Builder setNotifications(
           int index, in.xnnyygn.xgossip.rpc.Protos.MemberNotification.Builder builderForValue) {
@@ -5514,7 +7287,7 @@ public final class Protos {
         return this;
       }
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public Builder addNotifications(in.xnnyygn.xgossip.rpc.Protos.MemberNotification value) {
         if (notificationsBuilder_ == null) {
@@ -5530,7 +7303,7 @@ public final class Protos {
         return this;
       }
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public Builder addNotifications(
           int index, in.xnnyygn.xgossip.rpc.Protos.MemberNotification value) {
@@ -5547,7 +7320,7 @@ public final class Protos {
         return this;
       }
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public Builder addNotifications(
           in.xnnyygn.xgossip.rpc.Protos.MemberNotification.Builder builderForValue) {
@@ -5561,7 +7334,7 @@ public final class Protos {
         return this;
       }
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public Builder addNotifications(
           int index, in.xnnyygn.xgossip.rpc.Protos.MemberNotification.Builder builderForValue) {
@@ -5575,7 +7348,7 @@ public final class Protos {
         return this;
       }
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public Builder addAllNotifications(
           java.lang.Iterable<? extends in.xnnyygn.xgossip.rpc.Protos.MemberNotification> values) {
@@ -5590,12 +7363,12 @@ public final class Protos {
         return this;
       }
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public Builder clearNotifications() {
         if (notificationsBuilder_ == null) {
           notifications_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000008);
           onChanged();
         } else {
           notificationsBuilder_.clear();
@@ -5603,7 +7376,7 @@ public final class Protos {
         return this;
       }
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public Builder removeNotifications(int index) {
         if (notificationsBuilder_ == null) {
@@ -5616,14 +7389,14 @@ public final class Protos {
         return this;
       }
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public in.xnnyygn.xgossip.rpc.Protos.MemberNotification.Builder getNotificationsBuilder(
           int index) {
         return getNotificationsFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public in.xnnyygn.xgossip.rpc.Protos.MemberNotificationOrBuilder getNotificationsOrBuilder(
           int index) {
@@ -5633,7 +7406,7 @@ public final class Protos {
         }
       }
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public java.util.List<? extends in.xnnyygn.xgossip.rpc.Protos.MemberNotificationOrBuilder> 
            getNotificationsOrBuilderList() {
@@ -5644,14 +7417,14 @@ public final class Protos {
         }
       }
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public in.xnnyygn.xgossip.rpc.Protos.MemberNotification.Builder addNotificationsBuilder() {
         return getNotificationsFieldBuilder().addBuilder(
             in.xnnyygn.xgossip.rpc.Protos.MemberNotification.getDefaultInstance());
       }
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public in.xnnyygn.xgossip.rpc.Protos.MemberNotification.Builder addNotificationsBuilder(
           int index) {
@@ -5659,7 +7432,7 @@ public final class Protos {
             index, in.xnnyygn.xgossip.rpc.Protos.MemberNotification.getDefaultInstance());
       }
       /**
-       * <code>repeated .MemberNotification notifications = 3;</code>
+       * <code>repeated .MemberNotification notifications = 4;</code>
        */
       public java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberNotification.Builder> 
            getNotificationsBuilderList() {
@@ -5672,7 +7445,7 @@ public final class Protos {
           notificationsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               in.xnnyygn.xgossip.rpc.Protos.MemberNotification, in.xnnyygn.xgossip.rpc.Protos.MemberNotification.Builder, in.xnnyygn.xgossip.rpc.Protos.MemberNotificationOrBuilder>(
                   notifications_,
-                  ((bitField0_ & 0x00000004) == 0x00000004),
+                  ((bitField0_ & 0x00000008) == 0x00000008),
                   getParentForChildren(),
                   isClean());
           notifications_ = null;
@@ -5682,13 +7455,13 @@ public final class Protos {
 
       private com.google.protobuf.ByteString memberDigest_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>bytes member_digest = 4;</code>
+       * <code>bytes member_digest = 5;</code>
        */
       public com.google.protobuf.ByteString getMemberDigest() {
         return memberDigest_;
       }
       /**
-       * <code>bytes member_digest = 4;</code>
+       * <code>bytes member_digest = 5;</code>
        */
       public Builder setMemberDigest(com.google.protobuf.ByteString value) {
         if (value == null) {
@@ -5700,7 +7473,7 @@ public final class Protos {
         return this;
       }
       /**
-       * <code>bytes member_digest = 4;</code>
+       * <code>bytes member_digest = 5;</code>
        */
       public Builder clearMemberDigest() {
         
@@ -6618,12 +8391,36 @@ public final class Protos {
         int index);
 
     /**
-     * <code>bytes member_digest = 4;</code>
+     * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+     */
+    java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate> 
+        getMemberLeavedUpdatesList();
+    /**
+     * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+     */
+    in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate getMemberLeavedUpdates(int index);
+    /**
+     * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+     */
+    int getMemberLeavedUpdatesCount();
+    /**
+     * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+     */
+    java.util.List<? extends in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdateOrBuilder> 
+        getMemberLeavedUpdatesOrBuilderList();
+    /**
+     * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+     */
+    in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdateOrBuilder getMemberLeavedUpdatesOrBuilder(
+        int index);
+
+    /**
+     * <code>bytes member_digest = 5;</code>
      */
     com.google.protobuf.ByteString getMemberDigest();
 
     /**
-     * <code>int32 hop_count = 5;</code>
+     * <code>int32 hop_count = 6;</code>
      */
     int getHopCount();
   }
@@ -6642,6 +8439,7 @@ public final class Protos {
     private MemberUpdatesResponse() {
       exchangeAt_ = 0L;
       memberJoinedUpdates_ = java.util.Collections.emptyList();
+      memberLeavedUpdates_ = java.util.Collections.emptyList();
       memberDigest_ = com.google.protobuf.ByteString.EMPTY;
       hopCount_ = 0;
     }
@@ -6698,11 +8496,20 @@ public final class Protos {
               break;
             }
             case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                memberLeavedUpdates_ = new java.util.ArrayList<in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              memberLeavedUpdates_.add(
+                  input.readMessage(in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate.parser(), extensionRegistry));
+              break;
+            }
+            case 42: {
 
               memberDigest_ = input.readBytes();
               break;
             }
-            case 40: {
+            case 48: {
 
               hopCount_ = input.readInt32();
               break;
@@ -6724,6 +8531,9 @@ public final class Protos {
       } finally {
         if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
           memberJoinedUpdates_ = java.util.Collections.unmodifiableList(memberJoinedUpdates_);
+        }
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          memberLeavedUpdates_ = java.util.Collections.unmodifiableList(memberLeavedUpdates_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -6875,19 +8685,54 @@ public final class Protos {
       return memberJoinedUpdates_.get(index);
     }
 
-    public static final int MEMBER_DIGEST_FIELD_NUMBER = 4;
+    public static final int MEMBER_LEAVED_UPDATES_FIELD_NUMBER = 4;
+    private java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate> memberLeavedUpdates_;
+    /**
+     * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+     */
+    public java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate> getMemberLeavedUpdatesList() {
+      return memberLeavedUpdates_;
+    }
+    /**
+     * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+     */
+    public java.util.List<? extends in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdateOrBuilder> 
+        getMemberLeavedUpdatesOrBuilderList() {
+      return memberLeavedUpdates_;
+    }
+    /**
+     * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+     */
+    public int getMemberLeavedUpdatesCount() {
+      return memberLeavedUpdates_.size();
+    }
+    /**
+     * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+     */
+    public in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate getMemberLeavedUpdates(int index) {
+      return memberLeavedUpdates_.get(index);
+    }
+    /**
+     * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+     */
+    public in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdateOrBuilder getMemberLeavedUpdatesOrBuilder(
+        int index) {
+      return memberLeavedUpdates_.get(index);
+    }
+
+    public static final int MEMBER_DIGEST_FIELD_NUMBER = 5;
     private com.google.protobuf.ByteString memberDigest_;
     /**
-     * <code>bytes member_digest = 4;</code>
+     * <code>bytes member_digest = 5;</code>
      */
     public com.google.protobuf.ByteString getMemberDigest() {
       return memberDigest_;
     }
 
-    public static final int HOP_COUNT_FIELD_NUMBER = 5;
+    public static final int HOP_COUNT_FIELD_NUMBER = 6;
     private int hopCount_;
     /**
-     * <code>int32 hop_count = 5;</code>
+     * <code>int32 hop_count = 6;</code>
      */
     public int getHopCount() {
       return hopCount_;
@@ -6919,11 +8764,14 @@ public final class Protos {
       for (int i = 0; i < memberJoinedUpdates_.size(); i++) {
         output.writeMessage(3, memberJoinedUpdates_.get(i));
       }
+      for (int i = 0; i < memberLeavedUpdates_.size(); i++) {
+        output.writeMessage(4, memberLeavedUpdates_.get(i));
+      }
       if (!memberDigest_.isEmpty()) {
-        output.writeBytes(4, memberDigest_);
+        output.writeBytes(5, memberDigest_);
       }
       if (hopCount_ != 0) {
-        output.writeInt32(5, hopCount_);
+        output.writeInt32(6, hopCount_);
       }
       unknownFields.writeTo(output);
     }
@@ -6952,13 +8800,17 @@ public final class Protos {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, memberJoinedUpdates_.get(i));
       }
+      for (int i = 0; i < memberLeavedUpdates_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, memberLeavedUpdates_.get(i));
+      }
       if (!memberDigest_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, memberDigest_);
+          .computeBytesSize(5, memberDigest_);
       }
       if (hopCount_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(5, hopCount_);
+          .computeInt32Size(6, hopCount_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -6982,6 +8834,8 @@ public final class Protos {
           other.internalGetUpdatedMap());
       result = result && getMemberJoinedUpdatesList()
           .equals(other.getMemberJoinedUpdatesList());
+      result = result && getMemberLeavedUpdatesList()
+          .equals(other.getMemberLeavedUpdatesList());
       result = result && getMemberDigest()
           .equals(other.getMemberDigest());
       result = result && (getHopCount()
@@ -7007,6 +8861,10 @@ public final class Protos {
       if (getMemberJoinedUpdatesCount() > 0) {
         hash = (37 * hash) + MEMBER_JOINED_UPDATES_FIELD_NUMBER;
         hash = (53 * hash) + getMemberJoinedUpdatesList().hashCode();
+      }
+      if (getMemberLeavedUpdatesCount() > 0) {
+        hash = (37 * hash) + MEMBER_LEAVED_UPDATES_FIELD_NUMBER;
+        hash = (53 * hash) + getMemberLeavedUpdatesList().hashCode();
       }
       hash = (37 * hash) + MEMBER_DIGEST_FIELD_NUMBER;
       hash = (53 * hash) + getMemberDigest().hashCode();
@@ -7163,6 +9021,7 @@ public final class Protos {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
           getMemberJoinedUpdatesFieldBuilder();
+          getMemberLeavedUpdatesFieldBuilder();
         }
       }
       @java.lang.Override
@@ -7176,6 +9035,12 @@ public final class Protos {
           bitField0_ = (bitField0_ & ~0x00000004);
         } else {
           memberJoinedUpdatesBuilder_.clear();
+        }
+        if (memberLeavedUpdatesBuilder_ == null) {
+          memberLeavedUpdates_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+        } else {
+          memberLeavedUpdatesBuilder_.clear();
         }
         memberDigest_ = com.google.protobuf.ByteString.EMPTY;
 
@@ -7220,6 +9085,15 @@ public final class Protos {
           result.memberJoinedUpdates_ = memberJoinedUpdates_;
         } else {
           result.memberJoinedUpdates_ = memberJoinedUpdatesBuilder_.build();
+        }
+        if (memberLeavedUpdatesBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
+            memberLeavedUpdates_ = java.util.Collections.unmodifiableList(memberLeavedUpdates_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.memberLeavedUpdates_ = memberLeavedUpdates_;
+        } else {
+          result.memberLeavedUpdates_ = memberLeavedUpdatesBuilder_.build();
         }
         result.memberDigest_ = memberDigest_;
         result.hopCount_ = hopCount_;
@@ -7300,6 +9174,32 @@ public final class Protos {
                    getMemberJoinedUpdatesFieldBuilder() : null;
             } else {
               memberJoinedUpdatesBuilder_.addAllMessages(other.memberJoinedUpdates_);
+            }
+          }
+        }
+        if (memberLeavedUpdatesBuilder_ == null) {
+          if (!other.memberLeavedUpdates_.isEmpty()) {
+            if (memberLeavedUpdates_.isEmpty()) {
+              memberLeavedUpdates_ = other.memberLeavedUpdates_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureMemberLeavedUpdatesIsMutable();
+              memberLeavedUpdates_.addAll(other.memberLeavedUpdates_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.memberLeavedUpdates_.isEmpty()) {
+            if (memberLeavedUpdatesBuilder_.isEmpty()) {
+              memberLeavedUpdatesBuilder_.dispose();
+              memberLeavedUpdatesBuilder_ = null;
+              memberLeavedUpdates_ = other.memberLeavedUpdates_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              memberLeavedUpdatesBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getMemberLeavedUpdatesFieldBuilder() : null;
+            } else {
+              memberLeavedUpdatesBuilder_.addAllMessages(other.memberLeavedUpdates_);
             }
           }
         }
@@ -7728,15 +9628,255 @@ public final class Protos {
         return memberJoinedUpdatesBuilder_;
       }
 
+      private java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate> memberLeavedUpdates_ =
+        java.util.Collections.emptyList();
+      private void ensureMemberLeavedUpdatesIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          memberLeavedUpdates_ = new java.util.ArrayList<in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate>(memberLeavedUpdates_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate, in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate.Builder, in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdateOrBuilder> memberLeavedUpdatesBuilder_;
+
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate> getMemberLeavedUpdatesList() {
+        if (memberLeavedUpdatesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(memberLeavedUpdates_);
+        } else {
+          return memberLeavedUpdatesBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public int getMemberLeavedUpdatesCount() {
+        if (memberLeavedUpdatesBuilder_ == null) {
+          return memberLeavedUpdates_.size();
+        } else {
+          return memberLeavedUpdatesBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate getMemberLeavedUpdates(int index) {
+        if (memberLeavedUpdatesBuilder_ == null) {
+          return memberLeavedUpdates_.get(index);
+        } else {
+          return memberLeavedUpdatesBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public Builder setMemberLeavedUpdates(
+          int index, in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate value) {
+        if (memberLeavedUpdatesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMemberLeavedUpdatesIsMutable();
+          memberLeavedUpdates_.set(index, value);
+          onChanged();
+        } else {
+          memberLeavedUpdatesBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public Builder setMemberLeavedUpdates(
+          int index, in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate.Builder builderForValue) {
+        if (memberLeavedUpdatesBuilder_ == null) {
+          ensureMemberLeavedUpdatesIsMutable();
+          memberLeavedUpdates_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          memberLeavedUpdatesBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public Builder addMemberLeavedUpdates(in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate value) {
+        if (memberLeavedUpdatesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMemberLeavedUpdatesIsMutable();
+          memberLeavedUpdates_.add(value);
+          onChanged();
+        } else {
+          memberLeavedUpdatesBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public Builder addMemberLeavedUpdates(
+          int index, in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate value) {
+        if (memberLeavedUpdatesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMemberLeavedUpdatesIsMutable();
+          memberLeavedUpdates_.add(index, value);
+          onChanged();
+        } else {
+          memberLeavedUpdatesBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public Builder addMemberLeavedUpdates(
+          in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate.Builder builderForValue) {
+        if (memberLeavedUpdatesBuilder_ == null) {
+          ensureMemberLeavedUpdatesIsMutable();
+          memberLeavedUpdates_.add(builderForValue.build());
+          onChanged();
+        } else {
+          memberLeavedUpdatesBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public Builder addMemberLeavedUpdates(
+          int index, in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate.Builder builderForValue) {
+        if (memberLeavedUpdatesBuilder_ == null) {
+          ensureMemberLeavedUpdatesIsMutable();
+          memberLeavedUpdates_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          memberLeavedUpdatesBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public Builder addAllMemberLeavedUpdates(
+          java.lang.Iterable<? extends in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate> values) {
+        if (memberLeavedUpdatesBuilder_ == null) {
+          ensureMemberLeavedUpdatesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, memberLeavedUpdates_);
+          onChanged();
+        } else {
+          memberLeavedUpdatesBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public Builder clearMemberLeavedUpdates() {
+        if (memberLeavedUpdatesBuilder_ == null) {
+          memberLeavedUpdates_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          onChanged();
+        } else {
+          memberLeavedUpdatesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public Builder removeMemberLeavedUpdates(int index) {
+        if (memberLeavedUpdatesBuilder_ == null) {
+          ensureMemberLeavedUpdatesIsMutable();
+          memberLeavedUpdates_.remove(index);
+          onChanged();
+        } else {
+          memberLeavedUpdatesBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate.Builder getMemberLeavedUpdatesBuilder(
+          int index) {
+        return getMemberLeavedUpdatesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdateOrBuilder getMemberLeavedUpdatesOrBuilder(
+          int index) {
+        if (memberLeavedUpdatesBuilder_ == null) {
+          return memberLeavedUpdates_.get(index);  } else {
+          return memberLeavedUpdatesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public java.util.List<? extends in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdateOrBuilder> 
+           getMemberLeavedUpdatesOrBuilderList() {
+        if (memberLeavedUpdatesBuilder_ != null) {
+          return memberLeavedUpdatesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(memberLeavedUpdates_);
+        }
+      }
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate.Builder addMemberLeavedUpdatesBuilder() {
+        return getMemberLeavedUpdatesFieldBuilder().addBuilder(
+            in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate.Builder addMemberLeavedUpdatesBuilder(
+          int index) {
+        return getMemberLeavedUpdatesFieldBuilder().addBuilder(
+            index, in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .MemberJoinedUpdate member_leaved_updates = 4;</code>
+       */
+      public java.util.List<in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate.Builder> 
+           getMemberLeavedUpdatesBuilderList() {
+        return getMemberLeavedUpdatesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate, in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate.Builder, in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdateOrBuilder> 
+          getMemberLeavedUpdatesFieldBuilder() {
+        if (memberLeavedUpdatesBuilder_ == null) {
+          memberLeavedUpdatesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate, in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdate.Builder, in.xnnyygn.xgossip.rpc.Protos.MemberJoinedUpdateOrBuilder>(
+                  memberLeavedUpdates_,
+                  ((bitField0_ & 0x00000008) == 0x00000008),
+                  getParentForChildren(),
+                  isClean());
+          memberLeavedUpdates_ = null;
+        }
+        return memberLeavedUpdatesBuilder_;
+      }
+
       private com.google.protobuf.ByteString memberDigest_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>bytes member_digest = 4;</code>
+       * <code>bytes member_digest = 5;</code>
        */
       public com.google.protobuf.ByteString getMemberDigest() {
         return memberDigest_;
       }
       /**
-       * <code>bytes member_digest = 4;</code>
+       * <code>bytes member_digest = 5;</code>
        */
       public Builder setMemberDigest(com.google.protobuf.ByteString value) {
         if (value == null) {
@@ -7748,7 +9888,7 @@ public final class Protos {
         return this;
       }
       /**
-       * <code>bytes member_digest = 4;</code>
+       * <code>bytes member_digest = 5;</code>
        */
       public Builder clearMemberDigest() {
         
@@ -7759,13 +9899,13 @@ public final class Protos {
 
       private int hopCount_ ;
       /**
-       * <code>int32 hop_count = 5;</code>
+       * <code>int32 hop_count = 6;</code>
        */
       public int getHopCount() {
         return hopCount_;
       }
       /**
-       * <code>int32 hop_count = 5;</code>
+       * <code>int32 hop_count = 6;</code>
        */
       public Builder setHopCount(int value) {
         
@@ -7774,7 +9914,7 @@ public final class Protos {
         return this;
       }
       /**
-       * <code>int32 hop_count = 5;</code>
+       * <code>int32 hop_count = 6;</code>
        */
       public Builder clearHopCount() {
         
@@ -13256,10 +15396,20 @@ public final class Protos {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_MemberJoinResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_MemberLeavedRpc_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_MemberLeavedRpc_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_MemberJoinedUpdate_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_MemberJoinedUpdate_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_MemberLeavedUpdate_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_MemberLeavedUpdate_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_MemberNotification_descriptor;
   private static final 
@@ -13351,43 +15501,50 @@ public final class Protos {
       "\001(\003\"G\n\rMemberJoinRpc\022!\n\010endpoint\030\001 \001(\0132\017" +
       ".MemberEndpoint\022\023\n\013time_joined\030\002 \001(\003\".\n\022" +
       "MemberJoinResponse\022\030\n\007members\030\001 \003(\0132\007.Me" +
-      "mber\"X\n\022MemberJoinedUpdate\022\n\n\002id\030\001 \001(\003\022!" +
-      "\n\010endpoint\030\002 \001(\0132\017.MemberEndpoint\022\023\n\013tim" +
-      "e_joined\030\003 \001(\003\"z\n\022MemberNotification\022!\n\010" +
-      "endpoint\030\001 \001(\0132\017.MemberEndpoint\022\021\n\tsuspe" +
-      "cted\030\002 \001(\010\022\021\n\ttimestamp\030\003 \001(\003\022\033\n\002by\030\004 \001(" +
-      "\0132\017.MemberEndpoint\"\236\001\n\020MemberUpdatesRpc\022" +
-      "\023\n\013exchange_at\030\001 \001(\003\0222\n\025member_joined_up" +
-      "dates\030\002 \003(\0132\023.MemberJoinedUpdate\022*\n\rnoti" +
-      "fications\030\003 \003(\0132\023.MemberNotification\022\025\n\r" +
-      "member_digest\030\004 \001(\014\"\250\001\n\033MemberUpdatesAgr" +
-      "eedResponse\022\023\n\013exchange_at\030\001 \001(\003\022A\n\013upda" +
-      "ted_map\030\002 \003(\0132,.MemberUpdatesAgreedRespo" +
-      "nse.UpdatedMapEntry\0321\n\017UpdatedMapEntry\022\013" +
-      "\n\003key\030\001 \001(\003\022\r\n\005value\030\002 \001(\010:\0028\001\"\372\001\n\025Membe" +
-      "rUpdatesResponse\022\023\n\013exchange_at\030\001 \001(\003\022;\n" +
-      "\013updated_map\030\002 \003(\0132&.MemberUpdatesRespon" +
-      "se.UpdatedMapEntry\0222\n\025member_joined_upda" +
-      "tes\030\003 \003(\0132\023.MemberJoinedUpdate\022\025\n\rmember" +
-      "_digest\030\004 \001(\014\022\021\n\thop_count\030\005 \001(\005\0321\n\017Upda" +
-      "tedMapEntry\022\013\n\003key\030\001 \001(\003\022\r\n\005value\030\002 \001(\010:" +
-      "\0028\001\"\337\001\n\024MembersMergeResponse\022\023\n\013exchange" +
-      "_at\030\001 \001(\003\022:\n\013updated_map\030\002 \003(\0132%.Members" +
-      "MergeResponse.UpdatedMapEntry\022\030\n\007members" +
-      "\030\003 \003(\0132\007.Member\022\026\n\016members_digest\030\004 \001(\014\022" +
-      "\021\n\thop_count\030\005 \001(\005\0321\n\017UpdatedMapEntry\022\013\n" +
-      "\003key\030\001 \001(\003\022\r\n\005value\030\002 \001(\010:\0028\001\",\n\025Members" +
-      "MergedResponse\022\023\n\013exchange_at\030\001 \001(\003\"\032\n\007P" +
-      "ingRpc\022\017\n\007ping_at\030\001 \001(\003\"\037\n\014PingResponse\022" +
-      "\017\n\007ping_at\030\001 \001(\003\"D\n\016PingRequestRpc\022\017\n\007pi" +
-      "ng_at\030\001 \001(\003\022!\n\010endpoint\030\002 \001(\0132\017.MemberEn" +
-      "dpoint\"I\n\014ProxyPingRpc\022\017\n\007ping_at\030\001 \001(\003\022" +
-      "(\n\017source_endpoint\030\002 \001(\0132\017.MemberEndpoin" +
-      "t\"N\n\021ProxyPingResponse\022\017\n\007ping_at\030\001 \001(\003\022" +
-      "(\n\017source_endpoint\030\002 \001(\0132\017.MemberEndpoin" +
-      "t\"K\n\025ProxyPingDoneResponse\022\017\n\007ping_at\030\001 " +
-      "\001(\003\022!\n\010endpoint\030\002 \001(\0132\017.MemberEndpointB " +
-      "\n\026in.xnnyygn.xgossip.rpcB\006Protosb\006proto3"
+      "mber\"I\n\017MemberLeavedRpc\022!\n\010endpoint\030\001 \001(" +
+      "\0132\017.MemberEndpoint\022\023\n\013time_leaved\030\002 \001(\003\"" +
+      "X\n\022MemberJoinedUpdate\022\n\n\002id\030\001 \001(\003\022!\n\010end" +
+      "point\030\002 \001(\0132\017.MemberEndpoint\022\023\n\013time_joi" +
+      "ned\030\003 \001(\003\"X\n\022MemberLeavedUpdate\022\n\n\002id\030\001 " +
+      "\001(\003\022!\n\010endpoint\030\002 \001(\0132\017.MemberEndpoint\022\023" +
+      "\n\013time_leaved\030\003 \001(\003\"z\n\022MemberNotificatio" +
+      "n\022!\n\010endpoint\030\001 \001(\0132\017.MemberEndpoint\022\021\n\t" +
+      "suspected\030\002 \001(\010\022\021\n\ttimestamp\030\003 \001(\003\022\033\n\002by" +
+      "\030\004 \001(\0132\017.MemberEndpoint\"\321\001\n\020MemberUpdate" +
+      "sRpc\022\023\n\013exchange_at\030\001 \001(\003\0222\n\025member_join" +
+      "ed_updates\030\002 \003(\0132\023.MemberJoinedUpdate\0221\n" +
+      "\024member_leaved_update\030\003 \003(\0132\023.MemberLeav" +
+      "edUpdate\022*\n\rnotifications\030\004 \003(\0132\023.Member" +
+      "Notification\022\025\n\rmember_digest\030\005 \001(\014\"\250\001\n\033" +
+      "MemberUpdatesAgreedResponse\022\023\n\013exchange_" +
+      "at\030\001 \001(\003\022A\n\013updated_map\030\002 \003(\0132,.MemberUp" +
+      "datesAgreedResponse.UpdatedMapEntry\0321\n\017U" +
+      "pdatedMapEntry\022\013\n\003key\030\001 \001(\003\022\r\n\005value\030\002 \001" +
+      "(\010:\0028\001\"\256\002\n\025MemberUpdatesResponse\022\023\n\013exch" +
+      "ange_at\030\001 \001(\003\022;\n\013updated_map\030\002 \003(\0132&.Mem" +
+      "berUpdatesResponse.UpdatedMapEntry\0222\n\025me" +
+      "mber_joined_updates\030\003 \003(\0132\023.MemberJoined" +
+      "Update\0222\n\025member_leaved_updates\030\004 \003(\0132\023." +
+      "MemberJoinedUpdate\022\025\n\rmember_digest\030\005 \001(" +
+      "\014\022\021\n\thop_count\030\006 \001(\005\0321\n\017UpdatedMapEntry\022" +
+      "\013\n\003key\030\001 \001(\003\022\r\n\005value\030\002 \001(\010:\0028\001\"\337\001\n\024Memb" +
+      "ersMergeResponse\022\023\n\013exchange_at\030\001 \001(\003\022:\n" +
+      "\013updated_map\030\002 \003(\0132%.MembersMergeRespons" +
+      "e.UpdatedMapEntry\022\030\n\007members\030\003 \003(\0132\007.Mem" +
+      "ber\022\026\n\016members_digest\030\004 \001(\014\022\021\n\thop_count" +
+      "\030\005 \001(\005\0321\n\017UpdatedMapEntry\022\013\n\003key\030\001 \001(\003\022\r" +
+      "\n\005value\030\002 \001(\010:\0028\001\",\n\025MembersMergedRespon" +
+      "se\022\023\n\013exchange_at\030\001 \001(\003\"\032\n\007PingRpc\022\017\n\007pi" +
+      "ng_at\030\001 \001(\003\"\037\n\014PingResponse\022\017\n\007ping_at\030\001" +
+      " \001(\003\"D\n\016PingRequestRpc\022\017\n\007ping_at\030\001 \001(\003\022" +
+      "!\n\010endpoint\030\002 \001(\0132\017.MemberEndpoint\"I\n\014Pr" +
+      "oxyPingRpc\022\017\n\007ping_at\030\001 \001(\003\022(\n\017source_en" +
+      "dpoint\030\002 \001(\0132\017.MemberEndpoint\"N\n\021ProxyPi" +
+      "ngResponse\022\017\n\007ping_at\030\001 \001(\003\022(\n\017source_en" +
+      "dpoint\030\002 \001(\0132\017.MemberEndpoint\"K\n\025ProxyPi" +
+      "ngDoneResponse\022\017\n\007ping_at\030\001 \001(\003\022!\n\010endpo" +
+      "int\030\002 \001(\0132\017.MemberEndpointB \n\026in.xnnyygn" +
+      ".xgossip.rpcB\006Protosb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -13425,26 +15582,38 @@ public final class Protos {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_MemberJoinResponse_descriptor,
         new java.lang.String[] { "Members", });
-    internal_static_MemberJoinedUpdate_descriptor =
+    internal_static_MemberLeavedRpc_descriptor =
       getDescriptor().getMessageTypes().get(4);
+    internal_static_MemberLeavedRpc_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_MemberLeavedRpc_descriptor,
+        new java.lang.String[] { "Endpoint", "TimeLeaved", });
+    internal_static_MemberJoinedUpdate_descriptor =
+      getDescriptor().getMessageTypes().get(5);
     internal_static_MemberJoinedUpdate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_MemberJoinedUpdate_descriptor,
         new java.lang.String[] { "Id", "Endpoint", "TimeJoined", });
+    internal_static_MemberLeavedUpdate_descriptor =
+      getDescriptor().getMessageTypes().get(6);
+    internal_static_MemberLeavedUpdate_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_MemberLeavedUpdate_descriptor,
+        new java.lang.String[] { "Id", "Endpoint", "TimeLeaved", });
     internal_static_MemberNotification_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_MemberNotification_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_MemberNotification_descriptor,
         new java.lang.String[] { "Endpoint", "Suspected", "Timestamp", "By", });
     internal_static_MemberUpdatesRpc_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_MemberUpdatesRpc_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_MemberUpdatesRpc_descriptor,
-        new java.lang.String[] { "ExchangeAt", "MemberJoinedUpdates", "Notifications", "MemberDigest", });
+        new java.lang.String[] { "ExchangeAt", "MemberJoinedUpdates", "MemberLeavedUpdate", "Notifications", "MemberDigest", });
     internal_static_MemberUpdatesAgreedResponse_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_MemberUpdatesAgreedResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_MemberUpdatesAgreedResponse_descriptor,
@@ -13456,11 +15625,11 @@ public final class Protos {
         internal_static_MemberUpdatesAgreedResponse_UpdatedMapEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_MemberUpdatesResponse_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_MemberUpdatesResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_MemberUpdatesResponse_descriptor,
-        new java.lang.String[] { "ExchangeAt", "UpdatedMap", "MemberJoinedUpdates", "MemberDigest", "HopCount", });
+        new java.lang.String[] { "ExchangeAt", "UpdatedMap", "MemberJoinedUpdates", "MemberLeavedUpdates", "MemberDigest", "HopCount", });
     internal_static_MemberUpdatesResponse_UpdatedMapEntry_descriptor =
       internal_static_MemberUpdatesResponse_descriptor.getNestedTypes().get(0);
     internal_static_MemberUpdatesResponse_UpdatedMapEntry_fieldAccessorTable = new
@@ -13468,7 +15637,7 @@ public final class Protos {
         internal_static_MemberUpdatesResponse_UpdatedMapEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_MembersMergeResponse_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_MembersMergeResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_MembersMergeResponse_descriptor,
@@ -13480,43 +15649,43 @@ public final class Protos {
         internal_static_MembersMergeResponse_UpdatedMapEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_MembersMergedResponse_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_MembersMergedResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_MembersMergedResponse_descriptor,
         new java.lang.String[] { "ExchangeAt", });
     internal_static_PingRpc_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(13);
     internal_static_PingRpc_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_PingRpc_descriptor,
         new java.lang.String[] { "PingAt", });
     internal_static_PingResponse_descriptor =
-      getDescriptor().getMessageTypes().get(12);
+      getDescriptor().getMessageTypes().get(14);
     internal_static_PingResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_PingResponse_descriptor,
         new java.lang.String[] { "PingAt", });
     internal_static_PingRequestRpc_descriptor =
-      getDescriptor().getMessageTypes().get(13);
+      getDescriptor().getMessageTypes().get(15);
     internal_static_PingRequestRpc_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_PingRequestRpc_descriptor,
         new java.lang.String[] { "PingAt", "Endpoint", });
     internal_static_ProxyPingRpc_descriptor =
-      getDescriptor().getMessageTypes().get(14);
+      getDescriptor().getMessageTypes().get(16);
     internal_static_ProxyPingRpc_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ProxyPingRpc_descriptor,
         new java.lang.String[] { "PingAt", "SourceEndpoint", });
     internal_static_ProxyPingResponse_descriptor =
-      getDescriptor().getMessageTypes().get(15);
+      getDescriptor().getMessageTypes().get(17);
     internal_static_ProxyPingResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ProxyPingResponse_descriptor,
         new java.lang.String[] { "PingAt", "SourceEndpoint", });
     internal_static_ProxyPingDoneResponse_descriptor =
-      getDescriptor().getMessageTypes().get(16);
+      getDescriptor().getMessageTypes().get(18);
     internal_static_ProxyPingDoneResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ProxyPingDoneResponse_descriptor,

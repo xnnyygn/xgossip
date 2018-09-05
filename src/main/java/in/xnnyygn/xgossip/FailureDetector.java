@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ScheduledFuture;
 
 /**
@@ -22,7 +22,7 @@ class FailureDetector {
     private static final long INTERVAL = 3000;
     private static final long PING_TIMEOUT = 1000;
     private static final long PROXY_PING_TIMEOUT = 2000;
-    private final ConcurrentLinkedQueue<MemberEndpoint> suspectedMembers = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedDeque<MemberEndpoint> memberDeque = new ConcurrentLinkedDeque<>();
     private final LatencyRecorder latencyRecorder = new LatencyRecorder();
     private final MemberListContext context;
     private volatile Ping lastPing = NO_PING;
@@ -44,7 +44,6 @@ class FailureDetector {
     }
 
     private void schedulePing() {
-        logger.debug("schedule ping");
         context.getScheduler().schedule(this::ping, INTERVAL);
     }
 
@@ -55,14 +54,14 @@ class FailureDetector {
             return;
         }
         PingRpc rpc = new PingRpc();
-        context.getTransporter().send(endpoint, rpc);
         lastPing = new DirectPing(endpoint, rpc.getPingAt());
+        context.getTransporter().send(endpoint, rpc);
     }
 
     private MemberEndpoint selectMember() {
-        MemberEndpoint endpoint = suspectedMembers.poll();
+        MemberEndpoint endpoint = memberDeque.poll();
         if (endpoint != null) {
-            logger.debug("test suspected member {}", endpoint);
+            logger.debug("test member {}", endpoint);
             return endpoint;
         }
         return context.getMemberList().getRandomEndpointExceptSelf();
@@ -95,6 +94,13 @@ class FailureDetector {
         );
     }
 
+    void trustMember(MemberEndpoint endpoint) {
+        if (!latencyRecorder.isLastPingFailed(endpoint)) {
+            return;
+        }
+        memberDeque.addFirst(endpoint);
+    }
+
     void processNotifications(Collection<MemberNotification> notifications) {
         for (MemberNotification notification : notifications) {
             processNotification(notification);
@@ -102,13 +108,21 @@ class FailureDetector {
     }
 
     private void processNotification(MemberNotification notification) {
+        MemberEndpoint endpoint = notification.getEndpoint();
+        boolean lastPingFailed = latencyRecorder.isLastPingFailed(endpoint);
         if (notification.isSuspected()) {
-            if (latencyRecorder.isLastPingFailed(notification.getEndpoint())) {
+            if (lastPingFailed) {
                 return;
             }
-            suspectedMembers.add(notification.getEndpoint());
+            logger.debug("suspect member {} by {}", endpoint, notification.getBy());
+            memberDeque.addLast(endpoint);
+        } else {
+            if (!lastPingFailed) {
+                return;
+            }
+            logger.debug("trust member {} by {}", endpoint, notification.getBy());
+            memberDeque.addFirst(endpoint);
         }
-        context.getNotificationList().add(notification);
     }
 
     Set<MemberEndpoint> listSuspectedMembers() {
