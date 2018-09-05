@@ -1,13 +1,12 @@
 package in.xnnyygn.xgossip.rpc;
 
 import in.xnnyygn.xgossip.MemberEndpoint;
-import in.xnnyygn.xgossip.messages.AbstractMessage;
-import in.xnnyygn.xgossip.messages.MemberJoinRpc;
-import in.xnnyygn.xgossip.messages.RemoteMessage;
+import in.xnnyygn.xgossip.rpc.messages.AbstractMessage;
+import in.xnnyygn.xgossip.rpc.messages.MemberJoinRpc;
+import in.xnnyygn.xgossip.rpc.messages.RemoteMessage;
 import org.junit.Test;
 
 import java.net.DatagramPacket;
-import java.util.Arrays;
 
 import static org.junit.Assert.*;
 

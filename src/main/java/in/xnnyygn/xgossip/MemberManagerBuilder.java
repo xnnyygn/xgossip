@@ -1,6 +1,8 @@
 package in.xnnyygn.xgossip;
 
 import in.xnnyygn.xgossip.rpc.DefaultTransporter;
+import in.xnnyygn.xgossip.schedule.DefaultScheduler;
+import in.xnnyygn.xgossip.support.MessageDispatcher;
 
 public class MemberManagerBuilder {
 

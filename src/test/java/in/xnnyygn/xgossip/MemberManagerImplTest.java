@@ -1,8 +1,8 @@
 package in.xnnyygn.xgossip;
 
-import in.xnnyygn.xgossip.messages.MemberJoinResponse;
-import in.xnnyygn.xgossip.messages.MemberJoinRpc;
-import in.xnnyygn.xgossip.messages.RemoteMessage;
+import in.xnnyygn.xgossip.rpc.messages.MemberJoinResponse;
+import in.xnnyygn.xgossip.rpc.messages.MemberJoinRpc;
+import in.xnnyygn.xgossip.rpc.messages.RemoteMessage;
 import org.junit.Before;
 import org.junit.Test;
 

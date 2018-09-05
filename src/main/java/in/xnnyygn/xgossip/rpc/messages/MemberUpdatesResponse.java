@@ -1,4 +1,4 @@
-package in.xnnyygn.xgossip.messages;
+package in.xnnyygn.xgossip.rpc.messages;
 
 import in.xnnyygn.xgossip.updates.AbstractUpdate;
 
@@ -9,7 +9,6 @@ public class MemberUpdatesResponse extends AbstractMessage {
     private final long exchangeAt;
     private final Map<Long, Boolean> updatedMap;
     private final List<AbstractUpdate> updates;
-    // TODO add notifications
     private final byte[] membersDigest;
     private final int hopCount;
 

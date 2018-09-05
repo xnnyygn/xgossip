@@ -1,5 +1,7 @@
 package in.xnnyygn.xgossip;
 
+import in.xnnyygn.xgossip.schedule.Scheduler;
+
 import java.util.concurrent.ScheduledFuture;
 
 public class NullScheduler implements Scheduler {

@@ -1,7 +1,7 @@
-package in.xnnyygn.xgossip;
+package in.xnnyygn.xgossip.support;
 
-import in.xnnyygn.xgossip.messages.AbstractMessage;
-import in.xnnyygn.xgossip.messages.RemoteMessage;
+import in.xnnyygn.xgossip.rpc.messages.AbstractMessage;
+import in.xnnyygn.xgossip.rpc.messages.RemoteMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

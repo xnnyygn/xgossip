@@ -1,5 +1,6 @@
-package in.xnnyygn.xgossip.messages;
+package in.xnnyygn.xgossip.rpc.messages;
 
+import in.xnnyygn.xgossip.MemberNotification;
 import in.xnnyygn.xgossip.updates.AbstractUpdate;
 
 import java.util.*;
@@ -7,19 +8,22 @@ import java.util.*;
 public class MemberUpdatesRpc extends AbstractMessage {
 
     private final long exchangeAt;
-    private final List<AbstractUpdate> updates = new ArrayList<>();
-    private final List<AbstractUpdate> notifications = new ArrayList<>();
+    private final List<AbstractUpdate> updates;
+    private final List<MemberNotification> notifications;
     private final byte[] membersDigest;
 
-    public MemberUpdatesRpc(List<AbstractUpdate> rawUpdates, byte[] membersDigest) {
-        exchangeAt = System.currentTimeMillis();
-        for (AbstractUpdate update : rawUpdates) {
-            if (update.shouldFeedback()) {
-                this.updates.add(update);
-            } else {
-                this.notifications.add(update);
-            }
-        }
+    public MemberUpdatesRpc(List<AbstractUpdate> updates, byte[] membersDigest) {
+        this(System.currentTimeMillis(), updates, Collections.emptyList(), membersDigest);
+    }
+
+    public MemberUpdatesRpc(List<AbstractUpdate> updates, List<MemberNotification> notifications, byte[] membersDigest) {
+        this(System.currentTimeMillis(), updates, notifications, membersDigest);
+    }
+
+    public MemberUpdatesRpc(long exchangeAt, List<AbstractUpdate> updates, List<MemberNotification> notifications, byte[] membersDigest) {
+        this.exchangeAt = exchangeAt;
+        this.updates = updates;
+        this.notifications = notifications;
         this.membersDigest = membersDigest;
     }
 
@@ -27,7 +31,7 @@ public class MemberUpdatesRpc extends AbstractMessage {
         return updates;
     }
 
-    public List<AbstractUpdate> getNotifications() {
+    public List<MemberNotification> getNotifications() {
         return notifications;
     }
 

@@ -1,4 +1,4 @@
-package in.xnnyygn.xgossip;
+package in.xnnyygn.xgossip.schedule;
 
 import java.util.concurrent.ScheduledFuture;
 

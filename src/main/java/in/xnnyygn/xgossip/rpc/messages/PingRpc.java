@@ -1,11 +1,15 @@
-package in.xnnyygn.xgossip.messages;
+package in.xnnyygn.xgossip.rpc.messages;
 
 public class PingRpc extends AbstractMessage {
 
     private final long pingAt;
 
     public PingRpc() {
-        this.pingAt = System.currentTimeMillis();
+        this(System.currentTimeMillis());
+    }
+
+    public PingRpc(long pingAt) {
+        this.pingAt = pingAt;
     }
 
     public long getPingAt() {

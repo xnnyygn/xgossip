@@ -6,7 +6,9 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="in.xnnyygn.xgossip" level="info"/>
+        <Logger name="in.xnnyygn.xgossip" level="debug"/>
+        <Logger name="in.xnnyygn.xgossip.rpc.DefaultTransporter" level="info"/>
+        <Logger name="in.xnnyygn.xgossip.MemberListExchanger" level="info"/>
         <Root level="info">
             <AppenderRef ref="STDOUT"/>
         </Root>

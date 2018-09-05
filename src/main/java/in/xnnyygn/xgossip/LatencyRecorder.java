@@ -13,8 +13,14 @@ public class LatencyRecorder {
 
     private final ConcurrentMap<MemberEndpoint, Record> records = new ConcurrentHashMap<>();
 
-    public void add(MemberEndpoint endpoint, long pingAt, long latency) {
-        records.put(endpoint, new Record(endpoint, pingAt, latency));
+    public Long add(MemberEndpoint endpoint, long pingAt, long latency) {
+        Record previousRecord = records.put(endpoint, new Record(endpoint, pingAt, latency));
+        return previousRecord != null ? previousRecord.getLatency() : null;
+    }
+
+    public boolean isLastPingFailed(MemberEndpoint endpoint) {
+        Record lastRecord = records.get(endpoint);
+        return lastRecord != null && lastRecord.isFailed();
     }
 
     public Set<MemberEndpoint> listEndpointWithFailedPing() {

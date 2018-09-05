@@ -1,7 +1,8 @@
-package in.xnnyygn.xgossip.updates;
+package in.xnnyygn.xgossip;
 
 import com.google.common.collect.ImmutableSet;
-import in.xnnyygn.xgossip.MemberEndpoint;
+import in.xnnyygn.xgossip.updates.AbstractUpdate;
+import in.xnnyygn.xgossip.updates.MemberJoinedUpdate;
 import org.junit.Test;
 
 import java.util.List;

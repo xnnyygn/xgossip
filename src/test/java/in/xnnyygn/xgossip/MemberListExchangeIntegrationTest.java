@@ -1,7 +1,8 @@
 package in.xnnyygn.xgossip;
 
-import in.xnnyygn.xgossip.messages.MemberUpdatesRpc;
-import in.xnnyygn.xgossip.messages.RemoteMessage;
+import in.xnnyygn.xgossip.rpc.messages.MemberUpdatesRpc;
+import in.xnnyygn.xgossip.rpc.messages.RemoteMessage;
+import in.xnnyygn.xgossip.support.MessageDispatcher;
 import in.xnnyygn.xgossip.updates.MemberJoinedUpdate;
 import org.junit.Before;
 import org.junit.Test;

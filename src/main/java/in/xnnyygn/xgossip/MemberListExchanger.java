@@ -1,7 +1,8 @@
 package in.xnnyygn.xgossip;
 
 import com.google.common.collect.Sets;
-import in.xnnyygn.xgossip.messages.*;
+import in.xnnyygn.xgossip.rpc.messages.*;
+import in.xnnyygn.xgossip.support.MessageDispatcher;
 import in.xnnyygn.xgossip.updates.AbstractUpdate;
 import in.xnnyygn.xgossip.updates.MemberJoinedUpdate;
 import org.slf4j.Logger;
@@ -31,7 +32,7 @@ class MemberListExchanger {
     // invoked by manager
     void onReceiveMemberUpdatesRpc(RemoteMessage<MemberUpdatesRpc> message) {
         MemberUpdatesRpc rpc = message.get();
-        logger.debug("exchange with {}", message.getSender());
+        logger.debug("receive exchange from {}", message.getSender());
         context.getTransporter().reply(message, processMemberUpdatesRpc(rpc));
     }
 
@@ -169,7 +170,7 @@ class MemberListExchanger {
     // subscriber
     void onReceiveMembersMergeResponse(RemoteMessage<MembersMergeResponse> message) {
         MembersMergeResponse response = message.get();
-        logger.debug("exchange with {}, {}", message.getSender(), response);
+        logger.debug("exchanging with {}, {}", message.getSender(), response);
         feedback(response.getUpdatedMap());
         MemberList.UpdateResult result = context.getMemberList().mergeAll(response.getMembers());
         if (Arrays.equals(result.getDigest(), response.getMembersDigest())) {
@@ -182,6 +183,7 @@ class MemberListExchanger {
                 // 2. local or remote changed when try to merge members
                 context.getTransporter().reply(message, new MemberUpdatesRpc(
                         context.getUpdateList().take(MAX_UPDATES),
+                        Collections.emptyList(),
                         result.getDigest()
                 ));
             } else {

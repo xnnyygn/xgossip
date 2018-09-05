@@ -1,6 +1,6 @@
 package in.xnnyygn.xgossip;
 
-import in.xnnyygn.xgossip.messages.*;
+import in.xnnyygn.xgossip.rpc.messages.*;
 import in.xnnyygn.xgossip.updates.MemberJoinedUpdate;
 import org.junit.Before;
 import org.junit.Test;

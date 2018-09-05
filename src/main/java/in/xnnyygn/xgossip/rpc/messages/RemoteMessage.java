@@ -1,4 +1,4 @@
-package in.xnnyygn.xgossip.messages;
+package in.xnnyygn.xgossip.rpc.messages;
 
 import in.xnnyygn.xgossip.MemberEndpoint;
 

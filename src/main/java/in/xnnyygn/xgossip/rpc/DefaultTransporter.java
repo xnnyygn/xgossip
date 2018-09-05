@@ -1,9 +1,9 @@
 package in.xnnyygn.xgossip.rpc;
 
 import in.xnnyygn.xgossip.MemberEndpoint;
-import in.xnnyygn.xgossip.MessageDispatcher;
-import in.xnnyygn.xgossip.messages.AbstractMessage;
-import in.xnnyygn.xgossip.messages.RemoteMessage;
+import in.xnnyygn.xgossip.support.MessageDispatcher;
+import in.xnnyygn.xgossip.rpc.messages.AbstractMessage;
+import in.xnnyygn.xgossip.rpc.messages.RemoteMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,6 +67,8 @@ public class DefaultTransporter implements Transporter {
         logger.debug("=> {}, {}", endpoint, message);
         try {
             datagramSocket.send(packetProtocol.toPacket(selfEndpoint, message, endpoint));
+        } catch (SocketException e) {
+            // socket is closed
         } catch (IOException | ProtocolException e) {
             logger.warn("failed to send", e);
         }

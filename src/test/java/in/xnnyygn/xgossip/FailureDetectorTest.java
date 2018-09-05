@@ -1,12 +1,14 @@
 package in.xnnyygn.xgossip;
 
-import in.xnnyygn.xgossip.messages.*;
+import in.xnnyygn.xgossip.rpc.messages.*;
+import in.xnnyygn.xgossip.support.MessageDispatcher;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class FailureDetectorTest {
 

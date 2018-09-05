@@ -2,11 +2,12 @@ package in.xnnyygn.xgossip;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import in.xnnyygn.xgossip.messages.*;
-import in.xnnyygn.xgossip.updates.MemberSuspectedNotification;
+import in.xnnyygn.xgossip.rpc.messages.*;
+import in.xnnyygn.xgossip.support.MessageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -50,6 +51,7 @@ class FailureDetector {
     void ping() {
         MemberEndpoint endpoint = selectMember();
         if (endpoint == null) {
+            schedulePing();
             return;
         }
         PingRpc rpc = new PingRpc();
@@ -58,15 +60,9 @@ class FailureDetector {
     }
 
     private MemberEndpoint selectMember() {
-        Set<MemberEndpoint> pingFailed = latencyRecorder.listEndpointWithFailedPing();
-
-        // find first not pinged member
-        MemberEndpoint endpoint;
-        do {
-            endpoint = suspectedMembers.poll();
-        } while (endpoint != null && pingFailed.contains(endpoint));
-
+        MemberEndpoint endpoint = suspectedMembers.poll();
         if (endpoint != null) {
+            logger.debug("test suspected member {}", endpoint);
             return endpoint;
         }
         return context.getMemberList().getRandomEndpointExceptSelf();
@@ -99,8 +95,20 @@ class FailureDetector {
         );
     }
 
-    void addSuspectedMember(MemberEndpoint endpoint) {
-        suspectedMembers.add(endpoint);
+    void processNotifications(Collection<MemberNotification> notifications) {
+        for (MemberNotification notification : notifications) {
+            processNotification(notification);
+        }
+    }
+
+    private void processNotification(MemberNotification notification) {
+        if (notification.isSuspected()) {
+            if (latencyRecorder.isLastPingFailed(notification.getEndpoint())) {
+                return;
+            }
+            suspectedMembers.add(notification.getEndpoint());
+        }
+        context.getNotificationList().add(notification);
     }
 
     Set<MemberEndpoint> listSuspectedMembers() {
@@ -118,11 +126,17 @@ class FailureDetector {
         schedulePing();
     }
 
-    private void failedToPing(MemberEndpoint endpoint, long pingAt) {
+    private void pingFailed(MemberEndpoint endpoint, long pingAt) {
         logger.info("ping {} timeout", endpoint);
         latencyRecorder.add(endpoint, pingAt, -1);
-        context.getUpdateList().prepend(new MemberSuspectedNotification(endpoint));
-        schedulePing();
+        context.getNotificationList().suspectMember(endpoint, pingAt, context.getSelfEndpoint());
+        resetLastPing();
+    }
+
+    private void pingSuccess(MemberEndpoint endpoint, long pingAt, long latency) {
+        latencyRecorder.add(endpoint, pingAt, latency);
+        context.getNotificationList().trustMember(endpoint, pingAt, context.getSelfEndpoint());
+        resetLastPing();
     }
 
     private interface Ping {
@@ -167,6 +181,8 @@ class FailureDetector {
         @Override
         public void onResponse(RemoteMessage<? extends AbstractPingResponse> message) {
             AbstractPingResponse response = message.get();
+
+            // check if response is the response of current ping
             if (!(response instanceof PingResponse)) {
                 logger.info("expect ping response but was {}", response.getClass());
                 return;
@@ -176,22 +192,24 @@ class FailureDetector {
                         endpoint, pingAt, message.getSender(), response.getPingAt());
                 return;
             }
+
+            // ping done
+            future.cancel(false);
             long latency = System.currentTimeMillis() - pingAt;
             logger.debug("{}, latency {}ms", endpoint, latency);
-            latencyRecorder.add(endpoint, pingAt, latency);
-            future.cancel(false);
-            resetLastPing();
+            pingSuccess(endpoint, pingAt, latency);
         }
 
         @Override
         void onTimeout() {
+            // try to ping by other endpoints
             Set<MemberEndpoint> proxyEndpoints = context.getMemberList().getRandomEndpointsExcept(3, Sets.union(
                     ImmutableSet.of(context.getSelfEndpoint(), endpoint),
                     latencyRecorder.listEndpointWithFailedPing()
             ));
             if (proxyEndpoints.isEmpty()) {
                 logger.debug("no proxy endpoint");
-                failedToPing(endpoint, pingAt);
+                pingFailed(endpoint, pingAt);
                 return;
             }
             logger.debug("proxy ping {} by {}", endpoint, proxyEndpoints);
@@ -213,6 +231,8 @@ class FailureDetector {
 
         @Override
         public void onResponse(RemoteMessage<? extends AbstractPingResponse> message) {
+
+            // check if response is the response of current proxy ping
             AbstractPingResponse response = message.get();
             if (!(response instanceof ProxyPingDoneResponse)) {
                 logger.info("expect proxy ping done response but was {}", response.getClass());
@@ -222,19 +242,20 @@ class FailureDetector {
             if (!proxyEndpoints.contains(message.getSender()) || pingAt != response.getPingAt() ||
                     !this.endpoint.equals(endpoint)) {
                 logger.info("unexpected proxy ping done response from ({}, {}, {}), expect ({}, {}, {})",
-                        message.getSender(), pingAt, this.endpoint, proxyEndpoints, pingAt, endpoint);
+                        message.getSender(), response.getPingAt(), endpoint, proxyEndpoints, pingAt, this.endpoint);
                 return;
             }
+
+            // proxy ping done
+            future.cancel(false);
             long latency = System.currentTimeMillis() - pingAt;
             logger.debug("{}, latency {}ms through proxy {}", this.endpoint, latency, message.getSender());
-            latencyRecorder.add(this.endpoint, pingAt, latency);
-            future.cancel(false);
-            resetLastPing();
+            pingSuccess(this.endpoint, pingAt, latency);
         }
 
         @Override
         void onTimeout() {
-            failedToPing(endpoint, pingAt);
+            pingFailed(endpoint, pingAt);
         }
 
     }

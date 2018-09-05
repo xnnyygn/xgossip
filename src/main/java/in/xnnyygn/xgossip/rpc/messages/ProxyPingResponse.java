@@ -1,4 +1,4 @@
-package in.xnnyygn.xgossip.messages;
+package in.xnnyygn.xgossip.rpc.messages;
 
 import in.xnnyygn.xgossip.MemberEndpoint;
 
@@ -18,6 +18,14 @@ public class ProxyPingResponse extends AbstractMessage {
 
     public MemberEndpoint getSourceEndpoint() {
         return sourceEndpoint;
+    }
+
+    @Override
+    public String toString() {
+        return "ProxyPingResponse{" +
+                "pingAt=" + pingAt +
+                ", sourceEndpoint=" + sourceEndpoint +
+                '}';
     }
 
 }

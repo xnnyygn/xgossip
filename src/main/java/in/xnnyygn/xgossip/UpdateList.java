@@ -1,11 +1,11 @@
-package in.xnnyygn.xgossip.updates;
+package in.xnnyygn.xgossip;
 
+import in.xnnyygn.xgossip.updates.AbstractUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +27,7 @@ public class UpdateList {
         this.threshold = threshold;
     }
 
+    // TODO change to member joined
     public long prepend(AbstractUpdate update) {
         long updateId = entryId.incrementAndGet();
         update.setId(updateId);
@@ -40,23 +41,12 @@ public class UpdateList {
     }
 
     public List<AbstractUpdate> takeExcept(int n, Set<Long> excluding) {
-        List<UpdateEntry> entries =
-                entryMap.values().stream()
-                        .filter(e -> !excluding.contains(e.getId()))
-                        .sorted()
-                        .limit(n)
-                        .collect(Collectors.toList());
-        if (entries.isEmpty()) {
-            return Collections.emptyList();
-        }
-        List<AbstractUpdate> result = new ArrayList<>();
-        for (UpdateEntry e : entries) {
-            if (!e.shouldFeedback() && e.increaseCountAndGet() >= threshold) {
-                entryMap.remove(e.getId());
-            }
-            result.add(e.getUpdate());
-        }
-        return result;
+        return entryMap.values().stream()
+                .filter(e -> !excluding.contains(e.getId()))
+                .sorted()
+                .limit(n)
+                .map(UpdateEntry::getUpdate)
+                .collect(Collectors.toList());
     }
 
     public void decreaseUsefulness(long id) {
@@ -86,10 +76,6 @@ public class UpdateList {
 
         long getId() {
             return update.getId();
-        }
-
-        boolean shouldFeedback() {
-            return update.shouldFeedback();
         }
 
         int increaseCountAndGet() {

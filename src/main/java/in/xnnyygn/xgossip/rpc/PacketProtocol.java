@@ -1,10 +1,10 @@
 package in.xnnyygn.xgossip.rpc;
 
-import com.google.common.collect.Iterables;
 import com.google.protobuf.ByteString;
 import in.xnnyygn.xgossip.Member;
 import in.xnnyygn.xgossip.MemberEndpoint;
-import in.xnnyygn.xgossip.messages.*;
+import in.xnnyygn.xgossip.MemberNotification;
+import in.xnnyygn.xgossip.rpc.messages.*;
 import in.xnnyygn.xgossip.updates.AbstractUpdate;
 import in.xnnyygn.xgossip.updates.MemberJoinedUpdate;
 
@@ -26,6 +26,12 @@ class PacketProtocol {
     private static final int MSG_TYPE_MEMBER_UPDATES_RESPONSE = 5;
     private static final int MSG_TYPE_MEMBERS_MERGE_RESPONSE = 6;
     private static final int MSG_TYPE_MEMBERS_MERGED_RESPONSE = 7;
+    private static final int MSG_TYPE_PING_RPC = 8;
+    private static final int MSG_TYPE_PING_RESPONSE = 9;
+    private static final int MSG_TYPE_PING_REQUEST_RPC = 10;
+    private static final int MSG_TYPE_PROXY_PING_RPC = 11;
+    private static final int MSG_TYPE_PROXY_PING_RESPONSE = 12;
+    private static final int MSG_TYPE_PROXY_PING_DONE_RESPONSE = 13;
 
     DatagramPacket toPacket(MemberEndpoint sender, AbstractMessage message, MemberEndpoint recipient) {
         byte[] bytes;
@@ -71,6 +77,15 @@ class PacketProtocol {
         return members.stream().map(this::toProtoMember).collect(Collectors.toList());
     }
 
+    private Protos.MemberNotification toProtoMemberNotification(MemberNotification notification) {
+        return Protos.MemberNotification.newBuilder()
+                .setEndpoint(toProtoMemberEndpoint(notification.getEndpoint()))
+                .setSuspected(notification.isSuspected())
+                .setTimestamp(notification.getTimestamp())
+                .setBy(toProtoMemberEndpoint(notification.getBy()))
+                .build();
+    }
+
     private void writeMessage(AbstractMessage message, DataOutputStream dataOutput) throws IOException {
         if (message instanceof MemberJoinRpc) {
             dataOutput.writeInt(MSG_TYPE_MEMBER_JOIN_RPC);
@@ -78,34 +93,30 @@ class PacketProtocol {
             Protos.MemberJoinRpc.newBuilder()
                     .setEndpoint(toProtoMemberEndpoint(memberJoinRpc.getEndpoint()))
                     .setTimeJoined(memberJoinRpc.getTimeJoined())
-                    .build()
-                    .writeTo(dataOutput);
+                    .build().writeTo(dataOutput);
         } else if (message instanceof MemberJoinResponse) {
             dataOutput.writeInt(MSG_TYPE_MEMBER_JOIN_RESPONSE);
             MemberJoinResponse memberJoinResponse = (MemberJoinResponse) message;
             Protos.MemberJoinResponse.newBuilder()
                     .addAllMembers(toProtoMembers(memberJoinResponse.getMembers()))
-                    .build()
-                    .writeTo(dataOutput);
+                    .build().writeTo(dataOutput);
         } else if (message instanceof MemberUpdatesRpc) {
             dataOutput.writeInt(MSG_TYPE_MEMBER_UPDATES_RPC);
             MemberUpdatesRpc memberUpdatesRpc = (MemberUpdatesRpc) message;
-            Map<Class<? extends AbstractUpdate>, Collection<AbstractUpdate>> updateMap = groupUpdates(
-                    Iterables.concat(memberUpdatesRpc.getUpdates(), memberUpdatesRpc.getNotifications())
-            );
+            Map<Class<? extends AbstractUpdate>, Collection<AbstractUpdate>> updateMap = groupUpdates(memberUpdatesRpc.getUpdates());
             Protos.MemberUpdatesRpc.newBuilder()
+                    .setExchangeAt(memberUpdatesRpc.getExchangeAt())
+                    .addAllMemberJoinedUpdates(toProtoUpdates(updateMap, MemberJoinedUpdate.class))
+                    .addAllNotifications(memberUpdatesRpc.getNotifications().stream().map(this::toProtoMemberNotification).collect(Collectors.toList()))
                     .setMemberDigest(ByteString.copyFrom(memberUpdatesRpc.getMembersDigest()))
-                    .addAllMemberJoinedUpdate(toProtoUpdates(updateMap, MemberJoinedUpdate.class))
-                    .build()
-                    .writeTo(dataOutput);
+                    .build().writeTo(dataOutput);
         } else if (message instanceof MemberUpdatesAgreedResponse) {
             dataOutput.writeInt(MSG_TYPE_MEMBER_UPDATES_AGREED_RESPONSE);
             MemberUpdatesAgreedResponse memberUpdatesAgreedResponse = (MemberUpdatesAgreedResponse) message;
             Protos.MemberUpdatesAgreedResponse.newBuilder()
                     .setExchangeAt(memberUpdatesAgreedResponse.getExchangeAt())
                     .putAllUpdatedMap(memberUpdatesAgreedResponse.getUpdatedMap())
-                    .build()
-                    .writeTo(dataOutput);
+                    .build().writeTo(dataOutput);
         } else if (message instanceof MemberUpdatesResponse) {
             dataOutput.writeInt(MSG_TYPE_MEMBER_UPDATES_RESPONSE);
             MemberUpdatesResponse memberUpdatesResponse = (MemberUpdatesResponse) message;
@@ -115,11 +126,10 @@ class PacketProtocol {
             Protos.MemberUpdatesResponse.newBuilder()
                     .setExchangeAt(memberUpdatesResponse.getExchangeAt())
                     .putAllUpdatedMap(memberUpdatesResponse.getUpdatedMap())
-                    .addAllMemberJoinedUpdate(toProtoUpdates(updateMap, MemberJoinedUpdate.class))
+                    .addAllMemberJoinedUpdates(toProtoUpdates(updateMap, MemberJoinedUpdate.class))
                     .setMemberDigest(ByteString.copyFrom(memberUpdatesResponse.getMembersDigest()))
                     .setHopCount(memberUpdatesResponse.getHopCount())
-                    .build()
-                    .writeTo(dataOutput);
+                    .build().writeTo(dataOutput);
         } else if (message instanceof MembersMergeResponse) {
             dataOutput.writeInt(MSG_TYPE_MEMBERS_MERGE_RESPONSE);
             MembersMergeResponse membersMergeResponse = (MembersMergeResponse) message;
@@ -129,15 +139,53 @@ class PacketProtocol {
                     .addAllMembers(toProtoMembers(membersMergeResponse.getMembers()))
                     .setMembersDigest(ByteString.copyFrom(membersMergeResponse.getMembersDigest()))
                     .setHopCount(membersMergeResponse.getHopCount())
-                    .build()
-                    .writeTo(dataOutput);
+                    .build().writeTo(dataOutput);
         } else if (message instanceof MembersMergedResponse) {
             dataOutput.writeInt(MSG_TYPE_MEMBERS_MERGED_RESPONSE);
             MembersMergedResponse membersMergedResponse = (MembersMergedResponse) message;
             Protos.MembersMergedResponse.newBuilder()
                     .setExchangeAt(membersMergedResponse.getExchangeAt())
-                    .build()
-                    .writeTo(dataOutput);
+                    .build().writeTo(dataOutput);
+        } else if (message instanceof PingRpc) {
+            dataOutput.writeInt(MSG_TYPE_PING_RPC);
+            PingRpc pingRpc = (PingRpc) message;
+            Protos.PingRpc.newBuilder()
+                    .setPingAt(pingRpc.getPingAt())
+                    .build().writeTo(dataOutput);
+        } else if (message instanceof PingResponse) {
+            dataOutput.writeInt(MSG_TYPE_PING_RESPONSE);
+            PingResponse pingResponse = (PingResponse) message;
+            Protos.PingResponse.newBuilder()
+                    .setPingAt(pingResponse.getPingAt())
+                    .build().writeTo(dataOutput);
+        } else if (message instanceof PingRequestRpc) {
+            dataOutput.writeInt(MSG_TYPE_PING_REQUEST_RPC);
+            PingRequestRpc pingRequestRpc = (PingRequestRpc) message;
+            Protos.PingRequestRpc.newBuilder()
+                    .setPingAt(pingRequestRpc.getPingAt())
+                    .setEndpoint(toProtoMemberEndpoint(pingRequestRpc.getEndpoint()))
+                    .build().writeTo(dataOutput);
+        } else if (message instanceof ProxyPingRpc) {
+            dataOutput.writeInt(MSG_TYPE_PROXY_PING_RPC);
+            ProxyPingRpc proxyPingRpc = (ProxyPingRpc) message;
+            Protos.ProxyPingRpc.newBuilder()
+                    .setPingAt(proxyPingRpc.getPingAt())
+                    .setSourceEndpoint(toProtoMemberEndpoint(proxyPingRpc.getSourceEndpoint()))
+                    .build().writeTo(dataOutput);
+        } else if (message instanceof ProxyPingResponse) {
+            dataOutput.writeInt(MSG_TYPE_PROXY_PING_RESPONSE);
+            ProxyPingResponse proxyPingResponse = (ProxyPingResponse) message;
+            Protos.ProxyPingResponse.newBuilder()
+                    .setPingAt(proxyPingResponse.getPingAt())
+                    .setSourceEndpoint(toProtoMemberEndpoint(proxyPingResponse.getSourceEndpoint()))
+                    .build().writeTo(dataOutput);
+        } else if (message instanceof ProxyPingDoneResponse) {
+            dataOutput.writeInt(MSG_TYPE_PROXY_PING_DONE_RESPONSE);
+            ProxyPingDoneResponse proxyPingDoneResponse = (ProxyPingDoneResponse) message;
+            Protos.ProxyPingDoneResponse.newBuilder()
+                    .setPingAt(proxyPingDoneResponse.getPingAt())
+                    .setEndpoint(toProtoMemberEndpoint(proxyPingDoneResponse.getEndpoint()))
+                    .build().writeTo(dataOutput);
         } else {
             throw new ProtocolException("unsupported message " + message.getClass());
         }
@@ -223,7 +271,9 @@ class PacketProtocol {
                 case MSG_TYPE_MEMBER_UPDATES_RPC:
                     Protos.MemberUpdatesRpc protoMemberUpdatesRpc = Protos.MemberUpdatesRpc.parseFrom(input);
                     return new MemberUpdatesRpc(
-                            toUpdates(protoMemberUpdatesRpc.getMemberJoinedUpdateList()),
+                            protoMemberUpdatesRpc.getExchangeAt(),
+                            toUpdates(protoMemberUpdatesRpc.getMemberJoinedUpdatesList()),
+                            protoMemberUpdatesRpc.getNotificationsList().stream().map(this::toMemberNotification).collect(Collectors.toList()),
                             protoMemberUpdatesRpc.getMemberDigest().toByteArray()
                     );
                 case MSG_TYPE_MEMBER_UPDATES_AGREED_RESPONSE:
@@ -237,7 +287,7 @@ class PacketProtocol {
                     return new MemberUpdatesResponse(
                             protoMemberUpdatesResponse.getExchangeAt(),
                             protoMemberUpdatesResponse.getUpdatedMapMap(),
-                            toUpdates(protoMemberUpdatesResponse.getMemberJoinedUpdateList()),
+                            toUpdates(protoMemberUpdatesResponse.getMemberJoinedUpdatesList()),
                             protoMemberUpdatesResponse.getMemberDigest().toByteArray(),
                             protoMemberUpdatesResponse.getHopCount()
                     );
@@ -253,9 +303,36 @@ class PacketProtocol {
                 case MSG_TYPE_MEMBERS_MERGED_RESPONSE:
                     Protos.MembersMergedResponse protoMembersMergedResponse = Protos.MembersMergedResponse.parseFrom(input);
                     return new MembersMergedResponse(protoMembersMergedResponse.getExchangeAt());
+                case MSG_TYPE_PING_RPC:
+                    Protos.PingRpc protoPingRpc = Protos.PingRpc.parseFrom(input);
+                    return new PingRpc(protoPingRpc.getPingAt());
+                case MSG_TYPE_PING_RESPONSE:
+                    Protos.PingResponse protoPingResponse = Protos.PingResponse.parseFrom(input);
+                    return new PingResponse(protoPingResponse.getPingAt());
+                case MSG_TYPE_PING_REQUEST_RPC:
+                    Protos.PingRequestRpc protoPingRequestRpc = Protos.PingRequestRpc.parseFrom(input);
+                    return new PingRequestRpc(protoPingRequestRpc.getPingAt(), toMemberEndpoint(protoPingRequestRpc.getEndpoint()));
+                case MSG_TYPE_PROXY_PING_RPC:
+                    Protos.ProxyPingRpc protoProxyPingRpc = Protos.ProxyPingRpc.parseFrom(input);
+                    return new ProxyPingRpc(protoProxyPingRpc.getPingAt(), toMemberEndpoint(protoProxyPingRpc.getSourceEndpoint()));
+                case MSG_TYPE_PROXY_PING_RESPONSE:
+                    Protos.ProxyPingResponse protoProxyPingResponse = Protos.ProxyPingResponse.parseFrom(input);
+                    return new ProxyPingResponse(protoProxyPingResponse.getPingAt(), toMemberEndpoint(protoProxyPingResponse.getSourceEndpoint()));
+                case MSG_TYPE_PROXY_PING_DONE_RESPONSE:
+                    Protos.ProxyPingDoneResponse proxyPingDoneResponse = Protos.ProxyPingDoneResponse.parseFrom(input);
+                    return new ProxyPingDoneResponse(proxyPingDoneResponse.getPingAt(), toMemberEndpoint(proxyPingDoneResponse.getEndpoint()));
                 default:
                     throw new ParserException("unexpected message type " + messageType);
             }
+        }
+
+        private MemberNotification toMemberNotification(Protos.MemberNotification protoMemberNotification) {
+            return new MemberNotification(
+                    toMemberEndpoint(protoMemberNotification.getEndpoint()),
+                    protoMemberNotification.getSuspected(),
+                    protoMemberNotification.getTimestamp(),
+                    toMemberEndpoint(protoMemberNotification.getBy())
+            );
         }
 
         private List<AbstractUpdate> toUpdates(Iterable<?> rawUpdates) {

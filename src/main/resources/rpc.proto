@@ -29,9 +29,18 @@ message MemberJoinedUpdate {
     int64 time_joined = 3;
 }
 
+message MemberNotification {
+    MemberEndpoint endpoint = 1;
+    bool suspected = 2;
+    int64 timestamp = 3;
+    MemberEndpoint by = 4;
+}
+
 message MemberUpdatesRpc {
-    bytes member_digest = 1;
-    repeated MemberJoinedUpdate member_joined_update = 2;
+    int64 exchange_at = 1;
+    repeated MemberJoinedUpdate member_joined_updates = 2;
+    repeated MemberNotification notifications = 3;
+    bytes member_digest = 4;
 }
 
 message MemberUpdatesAgreedResponse {
@@ -42,7 +51,7 @@ message MemberUpdatesAgreedResponse {
 message MemberUpdatesResponse {
     int64 exchange_at = 1;
     map<int64, bool> updated_map = 2;
-    repeated MemberJoinedUpdate member_joined_update = 3;
+    repeated MemberJoinedUpdate member_joined_updates = 3;
     bytes member_digest = 4;
     int32 hop_count = 5;
 }
@@ -57,4 +66,32 @@ message MembersMergeResponse {
 
 message MembersMergedResponse {
     int64 exchange_at = 1;
+}
+
+message PingRpc {
+    int64 ping_at = 1;
+}
+
+message PingResponse {
+    int64 ping_at = 1;
+}
+
+message PingRequestRpc {
+    int64 ping_at = 1;
+    MemberEndpoint endpoint = 2;
+}
+
+message ProxyPingRpc {
+    int64 ping_at = 1;
+    MemberEndpoint source_endpoint = 2;
+}
+
+message ProxyPingResponse {
+    int64 ping_at = 1;
+    MemberEndpoint source_endpoint = 2;
+}
+
+message ProxyPingDoneResponse {
+    int64 ping_at = 1;
+    MemberEndpoint endpoint = 2;
 }

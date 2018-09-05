@@ -1,11 +1,13 @@
 package in.xnnyygn.xgossip;
 
 import in.xnnyygn.xgossip.rpc.Transporter;
-import in.xnnyygn.xgossip.updates.UpdateList;
+import in.xnnyygn.xgossip.schedule.Scheduler;
+import in.xnnyygn.xgossip.support.MessageDispatcher;
 
 class MemberListContext {
 
     private final UpdateList updateList = new UpdateList(5);
+    private final NotificationList notificationList = new NotificationList(5);
     private Scheduler scheduler;
     private MemberList memberList;
     private MessageDispatcher messageDispatcher;
@@ -54,6 +56,10 @@ class MemberListContext {
 
     void setMessageDispatcher(MessageDispatcher messageDispatcher) {
         this.messageDispatcher = messageDispatcher;
+    }
+
+    public NotificationList getNotificationList() {
+        return notificationList;
     }
 
 }

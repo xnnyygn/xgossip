@@ -1,6 +1,6 @@
 package in.xnnyygn.xgossip;
 
-import in.xnnyygn.xgossip.messages.AbstractMessage;
+import in.xnnyygn.xgossip.rpc.messages.AbstractMessage;
 
 import java.util.ArrayList;
 import java.util.List;

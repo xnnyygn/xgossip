@@ -2,17 +2,15 @@ package in.xnnyygn.xgossip;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import in.xnnyygn.xgossip.messages.MemberJoinResponse;
-import in.xnnyygn.xgossip.messages.MemberJoinRpc;
-import in.xnnyygn.xgossip.messages.MemberUpdatesRpc;
-import in.xnnyygn.xgossip.messages.RemoteMessage;
-import in.xnnyygn.xgossip.updates.AbstractUpdate;
+import in.xnnyygn.xgossip.rpc.messages.MemberJoinResponse;
+import in.xnnyygn.xgossip.rpc.messages.MemberJoinRpc;
+import in.xnnyygn.xgossip.rpc.messages.MemberUpdatesRpc;
+import in.xnnyygn.xgossip.rpc.messages.RemoteMessage;
+import in.xnnyygn.xgossip.support.MessageDispatcher;
 import in.xnnyygn.xgossip.updates.MemberJoinedUpdate;
-import in.xnnyygn.xgossip.updates.MemberSuspectedNotification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -40,7 +38,7 @@ class MemberManagerImpl implements MemberManager {
         dispatcher.register(MemberJoinResponse.class, this::onReceiveMemberJoinResponse);
 
         memberListExchanger.initialize();
-//        failureDetector.initialize();
+        failureDetector.initialize();
         context.getTransporter().initialize();
         context.getScheduler().scheduleWithFixedDelay(this::spreadUpdates, INTERVAL, INTERVAL);
     }
@@ -65,33 +63,22 @@ class MemberManagerImpl implements MemberManager {
 
     private void spreadUpdatesTo(Collection<MemberEndpoint> endpoints) {
         if (endpoints.isEmpty()) {
-            logger.debug("no member to exchange updates, skip");
             return;
         }
         MemberUpdatesRpc rpc = new MemberUpdatesRpc(
                 context.getUpdateList().take(1),
+                Collections.emptyList(),
                 context.getMemberList().getDigest()
         );
         for (MemberEndpoint endpoint : endpoints) {
-            logger.info("start exchange with {}", endpoint);
             context.getTransporter().send(endpoint, rpc);
         }
     }
 
     // subscriber
     private void onReceiveMemberUpdatesRpc(RemoteMessage<MemberUpdatesRpc> message) {
-        for (AbstractUpdate notification : message.get().getNotifications()) {
-            processNotification(notification);
-        }
+        failureDetector.processNotifications(message.get().getNotifications());
         memberListExchanger.onReceiveMemberUpdatesRpc(message);
-    }
-
-    private void processNotification(AbstractUpdate notification) {
-        if (notification instanceof MemberSuspectedNotification) {
-            failureDetector.addSuspectedMember(((MemberSuspectedNotification) notification).getEndpoint());
-        } else {
-            logger.warn("unknown notification {}", notification);
-        }
     }
 
     @Override
