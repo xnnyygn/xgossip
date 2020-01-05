@@ -4,7 +4,7 @@ Gossip based membership management and failure detection.
 
 ## Introduction
 
-xgossip is inspired by the paper `Epidemic Algorithms for Replicatied Database Maintenance`, which maybe the first paper of [gossip protocol|https://en.wikipedia.org/wiki/Gossip_protocol], to manage members in the cluster. It employs gossip protocol to spread members' change and exchange member list between members using push-pull strategy.
+xgossip is inspired by the paper `Epidemic Algorithms for Replicatied Database Maintenance`, which maybe the first paper of [gossip protocol](https://en.wikipedia.org/wiki/Gossip_protocol), to manage members in the cluster. It employs gossip protocol to spread members' change and exchange member list between members using push-pull strategy.
 
 Failure detection, which is based on the algorithm in the paper `On Scalable and Efficient Distributed Failure Detectors`, will mark member as `suspected` when ping and proxy ping are failed, or `backed` when ping response is not timeout. Gossip protocol here is used to broadcast the failure or recover of members and then xgossip will suppress sending rpc to suspected members.
 
@@ -48,9 +48,9 @@ $ mvn exec:java -Dexec.mainClass=in.xnnyygn.xgossip.Launcher -Dexec.args="5304 l
 
 Finally, press enter in the console of member `localhost:5303` to shutdown. 
 
-You should see something like `member localhost:5303 leaved`.
+You should see something like `member localhost:5303 LEAVED`.
 
-Example log
+Example log of `localhost:5302`
 
 ```
 2018-09-08 16:22:58.756 [in.xnnyygn.xgossip.Launcher.main()] INFO  rpc.DefaultTransporter - start udp server at port 5302
@@ -82,11 +82,11 @@ Service should call `initialize` when start and `shutdown` when stop.
 
 To join the cluster, call `join` with seed endpoints. Technically, you should provide some seed endpoints unless current member is the first member in the cluster.
 
-When service is running, available endpoints in the cluster can be retrieved by calling `listAvailableEndpoints` at any time. Listener is also supported to be notificated of new members, suspected members etc.
+When service is running, available endpoints in the cluster can be retrieved by calling `listAvailableEndpoints` at any time. Listener is also supported with notification of new members, suspected members etc.
 
 ## Build
 
-xgossip uses [maven|https://maven.apache.org/] as the build system.
+xgossip uses [maven](https://maven.apache.org/) as the build system.
 
 ```
 $ mvn clean compile install
