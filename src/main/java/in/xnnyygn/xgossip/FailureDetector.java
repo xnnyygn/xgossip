@@ -19,9 +19,9 @@ import java.util.concurrent.ScheduledFuture;
 class FailureDetector {
 
     private static final Logger logger = LoggerFactory.getLogger(FailureDetector.class);
-    private static final long INTERVAL = 3000;
-    private static final long PING_TIMEOUT = 1000;
-    private static final long PROXY_PING_TIMEOUT = 2000;
+    private static final long INTERVAL = 400;
+    private static final long PING_TIMEOUT = 100;
+    private static final long PROXY_PING_TIMEOUT = 200;
     private final ConcurrentLinkedDeque<MemberEndpoint> memberDeque = new ConcurrentLinkedDeque<>();
     private final LatencyRecorder latencyRecorder = new LatencyRecorder();
     private final MemberListContext context;

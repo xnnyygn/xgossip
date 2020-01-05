@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 class MemberManagerImpl implements MemberManager {
 
-    private static final long INTERVAL = 3000;
+    private static final long INTERVAL = 1000;
     private static final Logger logger = LoggerFactory.getLogger(MemberManagerImpl.class);
     private final MemberListContext context;
     private final MemberListExchanger memberListExchanger;
